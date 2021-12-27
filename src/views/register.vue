@@ -1,0 +1,187 @@
+<template>
+  <div class="register">
+    <div class="pop" v-if="showModal">注册成功！</div>
+    <el-dialog
+      title="注册提示"
+      :visible.sync="showModal"
+      :close-on-click-modal="true"
+      :modal="true"
+      :show-close="true"
+      :center="true"
+      class="tankuang"
+    >
+      <h1 @click="back" class="tiaozhuan">注册成功！点我去登录</h1>
+    </el-dialog>
+    <div class="left">
+      <el-form
+        :rules="rules"
+        ref="registerForm"
+        :model="registerForm"
+        class="loginContain"
+      >
+        <h3 class="registerTitle">欢迎新朋友加入</h3>
+        <el-form-item prop="username">
+          <el-input
+            type="text"
+            auto-complete="false"
+            v-model="registerForm.username"
+            placeholder="用戶名"
+            >用户名：</el-input
+          >
+        </el-form-item>
+        <el-form-item prop="password">
+          <el-input
+            type="password"
+            auto-complete="false"
+            v-model="registerForm.password"
+            placeholder="密码"
+            >密码：</el-input
+          >
+        </el-form-item>
+        <el-form-item prop="code">
+          <el-input
+            type="text"
+            auto-complete="false"
+            v-model="registerForm.code"
+            placeholder="验证码"
+            style="width: 250px; margin: 0px 0px 0px 0px"
+          ></el-input>
+          <img :src="captchaUrl" @click="updateCaptcha" />
+        </el-form-item>
+        <el-input
+          type="text"
+          v-model="registerForm.accountToken"
+          auto-complete="false"
+          placeholder="权限令牌"
+          class="qx"
+          >权限令牌</el-input
+        >
+        <el-button type="primary" class="registerSubmit" @click="submit"
+          >注册</el-button
+        >
+      </el-form>
+    </div>
+    <div class="right">
+      简介：
+      <h2>{{ kjjj }}</h2>
+    </div>
+  </div>
+</template>
+<script>
+import { postRequest } from "../uitls/api";
+export default {
+  name: "register",
+  data() {
+    return {
+      captchaUrl: "/blog/captcha?time" + new Date(),
+      showModal: false,
+      kjjj: "lalalalal",
+      registerForm: {
+        username: "",
+        password: "",
+        accountToken: "",
+        code: "",
+      },
+      rules: {
+        username: [{ required: true, message: "账号账号！", trigger: "blur" }],
+        password: [{ required: true, message: "密码啊亲！", trigger: "blur" }],
+        code: [{ required: true, message: "验证码！", trigger: "blur" }],
+        accountToken: [
+          { required: true, message: "有令牌才是自己人", trigger: "blur" },
+        ],
+      },
+    };
+  },
+  mounted: function () {
+    this.getKjjj();
+  },
+  methods: {
+    getKjjj() {
+      postRequest("/blog/login/kjjj", this.registerForm).then((resp) => {
+        console.log(":@@@@@@@@@@:" + resp.obj.kjjj);
+        if (resp.obj) {
+          this.kjjj = resp.obj.kjjj;
+        }
+      });
+    },
+    back() {
+      this.$router.push({
+        name: "Login",
+      });
+    },
+    updateCaptcha() {
+      this.captchaUrl = "/blog/captcha?time" + new Date();
+    },
+    submit() {
+      this.$refs.registerForm.validate((valid) => {
+        if (valid) {
+          postRequest("/blog/login/register", this.registerForm).then(
+            (resp) => {
+              console.log(":@@@@@@@@@@:" + resp);
+              if (resp.obj) {
+                this.showModal = true;
+              }
+            }
+          );
+        } else {
+          this.$message.error("你不配");
+          return false;
+        }
+      });
+    },
+  },
+};
+</script>
+
+<style>
+.register {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  padding: 10px 35px 10px 35px;
+  background-image: url("../assets/register.jpeg");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  margin: 0 auto;
+}
+.loginContain {
+  margin: 10%;
+  border-radius: 15px;
+  background-clip: padding-box;
+  height: 320px;
+  width: 350px;
+  padding: 10px 18px 5px 18px;
+  background-color: rgba(0, 0, 0, 0.3);
+  border: 1px black;
+}
+.registerTitle {
+  margin: 0px auto 25px auto;
+  text-align: center;
+}
+.qx {
+  margin: 0px auto 5px 0px;
+}
+.tankuang {
+  height: 100%;
+  width: 80%;
+}
+.tiaozhuan {
+  color: rgb(5, 65, 121);
+  font-size: 100%;
+  text-align: center;
+}
+.registerSubmit {
+  margin: 0px 10px 0px auto;
+  width: 100%;
+}
+.left,
+.right {
+  height: 320px;
+  width: 350px;
+  padding: 30px 80px 30px 80px;
+  float: left;
+}
+.right {
+  margin-top: 20px;
+}
+</style>
