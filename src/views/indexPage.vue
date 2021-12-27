@@ -7,7 +7,18 @@
         <li><a @click="toHelp">联系站长</a></li>
 
         <li class="lf1">
-          <img :src="icon" @click="toUserInfo" />
+          <img
+            v-bind:src="icon"
+            @click="toUserInfo"
+            style="
+              width: 30px;
+              height: 30px;
+              overflow: hidden;
+              border-radius: 50%;
+              margin-top: -8px;
+            "
+          />
+          <!--  <avatar username="name"></avatar> -->
         </li>
         <li class="lf1"><a>欢迎登录：</a></li>
       </ul>
@@ -117,12 +128,6 @@
         </div>
       </el-card>
     </div>
-
-    <!--    <div class="shenghua">
-      <ul>
-        <li>姐姐怀中惊坐起，SP竟是我自己</li>
-      </ul>
-    </div> -->
   </div>
 </template>
 <script>
@@ -133,8 +138,9 @@ export default {
       name: window.sessionStorage.getItem("username"),
       icon:
         null == window.sessionStorage.getItem("icon")
-          ? "../assets/nv1.jpg"
-          : window.sessionStorage.getItem("icon"),
+          ? "https://img2.baidu.com/it/u=3683141353,2044374394&fm=26&fmt=auto"
+          : /*           "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2Ftx20%2F51041101418690.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1643165630&t=9fd3a57bb398957a4a31a60eddf64871"
+             */ window.sessionStorage.getItem("icon"),
       cxqq: {
         title: "",
         size: 10,
@@ -180,10 +186,14 @@ export default {
       alert("该功能暂未开发！");
     },
     toActive() {
-      alert("该功能暂未开发！");
+      this.$router.push({
+        name: "spacePage",
+      });
     },
     toUserInfo() {
-      alert("该功能暂未开发！");
+      this.$router.push({
+        name: "userInfoPage",
+      });
     },
     getArticle() {
       (this.cxqq.size = this.pagesize),

@@ -111,7 +111,7 @@ export default {
               //存到session里
               window.sessionStorage.setItem("tokenStr", tokenStr);
               window.sessionStorage.setItem("username", resp.obj.username);
-              window.sessionStorage.setItem("ison", resp.obj.icon);
+              window.sessionStorage.setItem("icon", resp.obj.icon);
               this.$router.replace({
                 name: "IndexPage",
               });
