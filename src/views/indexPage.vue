@@ -20,10 +20,12 @@
           />
           <!--  <avatar username="name"></avatar> -->
         </li>
-        <li class="lf1"><a>欢迎登录：</a></li>
+        <li class="lf1">
+          <a>欢迎登录：{{ name }}&nbsp</a>
+        </li>
       </ul>
     </div>
-    <h1>欢迎来到LSP的留言板,亲爱的LSP：{{ name }}</h1>
+    <h1>欢迎来到LSP的留言板</h1>
     <div class="body">
       <el-dialog title="留下你的想法" :visible.sync="dialogVisible" width="30%">
         <el-form ref="form" :model="form" label-width="80px">
@@ -249,8 +251,8 @@ export default {
   color: crimson;
   font-size: 200%;
   text-align: center;
-  width: 98.35%;
-  height: 200%;
+  width: 98.73%;
+  height: 120%;
 
   position: absolute;
   background: url("../assets/index.jpg") center center no-repeat;
@@ -267,7 +269,6 @@ export default {
 li {
   float: left;
   display: block;
-
   margin: 0, 0, 0, 10px;
 }
 .lf1 {

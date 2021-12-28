@@ -73,7 +73,7 @@ export default {
           ? city.substring(0, city.length - 1)
           : city.substring(index + 1, city.length);
       if (city.indexOf("省") == -1) {
-        obj = "广州";
+        obj = "石家庄";
       }
       console.log("我的城市地名", index);
       console.log("我的城市地名", obj);
@@ -108,7 +108,7 @@ export default {
 <style>
 .indexBack {
   width: 98.35%;
-  height: 200%;
+  height: 98.35%;
 
   font-size: 200%;
   text-align: center;
