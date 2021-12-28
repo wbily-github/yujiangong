@@ -26,6 +26,10 @@
         &nbsp{{ name }}&nbsp
       </div>
       <div class="lf1">欢迎回来!</div>
+      <div class="lf2">
+        <li class="li">{{ date }}</li>
+        <li class="li">&nbsp{{ tianqi }}</li>
+      </div>
     </div>
     <div class="body">姐姐怀中惊坐起，SP竟是我自己</div>
   </div>
@@ -46,6 +50,7 @@ export default {
       back: "http://101.42.232.134/group1/M00/00/00/CgAYCWHKwi2AQog0AAQzBCR7_yY357.jpg",
       backType: "",
       ip: "",
+      date: "",
       weatherToday: {},
       tianqi: "",
       ip: "",
@@ -68,7 +73,7 @@ export default {
           ? city.substring(0, city.length - 1)
           : city.substring(index + 1, city.length);
       if (city.indexOf("省") == -1) {
-        obj = "泌阳";
+        obj = "广州";
       }
       console.log("我的城市地名", index);
       console.log("我的城市地名", obj);
@@ -76,23 +81,21 @@ export default {
       var result = axios.get(
         "http://wthrcdn.etouch.cn/weather_mini?city=" + obj
       );
+      console.log("天气查询结果", result);
       result.then((res) => {
-        this.tianqi = res.data.forecast[0].type;
+        console.log("天气查询结果", res.data.forecast[0]);
+        this.date = res.data.forecast[0].date + " " + res.data.forecast[0].type;
+        this.tianqi =
+          res.data.forecast[0].low + "~" + res.data.forecast[0].high;
         if ("晴" == res.data.forecast[0].type) {
           this.back =
             "http://101.42.232.134/group1/M00/00/00/CgAYCWHKwi2AQog0AAQzBCR7_yY357.jpg";
-          /*  (this.indexBack.backgroundImage =
-              "url(" + require("../assets/background晴天.jpg") + ")"); */
         } else if ("多云" == res.data.forecast[0].type) {
           this.back =
             "http://101.42.232.134/group1/M00/00/00/CgAYCWHKiUKACsZaAABJLDVfXhc694.jpg";
-          /*   this.indexBack.backgroundImage =
-            "url(" + require("../assets/background阴天.jpg") + ")"; */
         } else {
           this.back =
             "http://101.42.232.134/group1/M00/00/00/CgAYCWHKiUmAX9h5AAE47Lj1MhY634.jpg";
-          /*    this.indexBack.backgroundImage =
-            "url(" + require("../assets/background雨天.jpg") + ")"; */
         }
 
         console.log("********************", this.back);
@@ -106,12 +109,10 @@ export default {
 .indexBack {
   width: 98.35%;
   height: 200%;
-  color: crimson;
+
   font-size: 200%;
   text-align: center;
-
   position: absolute;
-
   padding: 10px;
 }
 .header {
@@ -126,9 +127,23 @@ export default {
   margin-top: 20px;
 }
 .lf1 {
-  font-size: 50%;
+  font-size: 80%;
   float: right;
   display: block;
   margin: 0, 0, 0, 10px;
+}
+.lf2 {
+  font-size: 80%;
+  float: left;
+  display: block;
+  margin: 0, 0, 0, 10px;
+}
+.li {
+  list-style: none;
+}
+.body {
+  /* float: left; */
+  color: crimson;
+  margin-top: 20px;
 }
 </style>
