@@ -12,7 +12,6 @@
       <div class="lf1">
         <img
           v-bind:src="icon"
-          @click="toUserInfo"
           style="
             width: 30px;
             height: 30px;
@@ -43,10 +42,10 @@ export default {
       icon:
         null == window.sessionStorage.getItem("icon")
           ? "https://img2.baidu.com/it/u=3683141353,2044374394&fm=26&fmt=auto"
-          : /*           "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2Ftx20%2F51041101418690.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1643165630&t=9fd3a57bb398957a4a31a60eddf64871"
-             */ window.sessionStorage.getItem("icon"),
-      back: "",
+          : window.sessionStorage.getItem("icon"),
+      back: "http://101.42.232.134/group1/M00/00/00/CgAYCWHKwi2AQog0AAQzBCR7_yY357.jpg",
       backType: "",
+      ip: "",
       weatherToday: {},
       tianqi: "",
       ip: "",
@@ -58,15 +57,20 @@ export default {
 
   methods: {
     //获取当地城市及天气
-
     getTianQi() {
       //获取城市名
+      var city = returnCitySN["cname"];
 
-      var index = returnCitySN["cname"].lastIndexOf("省");
-      var obj = returnCitySN["cname"].substring(
-        index + 1,
-        returnCitySN["cname"].length
-      );
+      var index = city.lastIndexOf("省");
+      this.ip = returnCitySN["cip"];
+      var obj =
+        null == city.substring(index + 1, city.length)
+          ? city.substring(0, city.length - 1)
+          : city.substring(index + 1, city.length);
+      if (city.indexOf("省") == -1) {
+        obj = "泌阳";
+      }
+      console.log("我的城市地名", index);
       console.log("我的城市地名", obj);
       //获取天气
       var result = axios.get(
