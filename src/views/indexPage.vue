@@ -249,7 +249,7 @@ export default {
   color: crimson;
   font-size: 200%;
   text-align: center;
-  width: 98%;
+  width: 98.35%;
   height: 200%;
 
   position: absolute;
