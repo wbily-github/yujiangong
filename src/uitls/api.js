@@ -74,3 +74,11 @@ export const postRequest = (url, params) => {
         data: params
     })
 }
+export const getRequest = (url, params) => {
+    return axios({
+        method: 'get',
+       // url: 'http://101.42.232.134:8099' + url,
+       url: 'http://localhost:8080' + url,
+        data: params
+    })
+}
