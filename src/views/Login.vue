@@ -6,7 +6,7 @@
     element-loading-spinner="el-icon-loading"
     element-loading-background="rpba(0,0,0,0.8)"
   >
-    <div class="left">
+    <div class="left1">
       <el-form
         :rules="rules"
         ref="loginForm"
@@ -49,7 +49,7 @@
         </div>
       </el-form>
     </div>
-    <div class="right">
+    <div class="right1">
       今日份热点：
       <h2>&nbsp;{{ title }}</h2>
       <h3 class="redian">&nbsp;&nbsp;{{ content }}</h3>
@@ -100,6 +100,7 @@ export default {
       });
     },
     submit() {
+      console.log("QQQQQQQQQQQQQQQQQQQQ", this.loginForm);
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
           this.loading = true;
@@ -169,6 +170,14 @@ export default {
 .loginRemember {
   text-align: left;
   margin: 0px 0px 0px 0px;
+}
+.left1 {
+  float: left;
+}
+
+.right1 {
+  float: right;
+  margin-right: 88px;
 }
 .el-form-item__content {
   display: flex;

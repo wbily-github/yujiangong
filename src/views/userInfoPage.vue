@@ -1,36 +1,52 @@
 <template>
   <div class="userInfoIndex">
     <div class="header"></div>
-    <div class="body">
+    <div class="userBody">
       <div class="left"></div>
       <div class="center">
-        <el-input
-          type="text"
-          auto-complete="false"
-          v-model="userForm.username"
-          placeholder="用戶名"
-        ></el-input>
-        <el-upload
-          action="http://localhost:8088/upload/file/"
-          :headers="headers"
-          list-type="picture-card"
-          :file-list="fileArr"
-          :limit="1"
-          :on-success="handleAvatarSuccess"
+        <el-form
+          ref="userForm"
+          :model="userForm"
+          :rules="userRules"
+          label-width="80px"
+          class="login-box"
         >
-          <i class="el-icon-plus"></i>
-          <div slot="tip" class="el-upload__tip">
-            限制上传一张, 只能上传jpg/png文件，且不超过500kb
-          </div>
-        </el-upload>
-        <el-button @click="saveUserInfo">保存</el-button>
+          <el-form-item label="用户名" prop="username">
+            <el-input
+              class="username"
+              type="text"
+              auto-complete="false"
+              v-model="userForm.username"
+              placeholder="用戶名"
+            ></el-input>
+          </el-form-item>
+
+          <el-form-item label="用户名" prop="icon">
+            <el-upload
+              class="upload-demo"
+              ref="upload"
+              action="string"
+              list-type="picture-card"
+              :http-request="UploadImage"
+              :on-change="fileChange"
+              :file-list="fileArr"
+            >
+              <el-button size="small" type="primary">点击上传</el-button>
+              <div slot="tip" class="el-upload__tip">
+                只能上传jpg/jpeg/png文件，且不超过500kb
+              </div>
+            </el-upload>
+          </el-form-item>
+
+          <el-button @click="saveUserInfo">保存</el-button>
+        </el-form>
       </div>
       <div class="right">{{ fileArr }}</div>
     </div>
   </div>
 </template>
 <script>
-import { getRequest } from "../uitls/api";
+import { getRequest, postRequest } from "../uitls/api";
 export default {
   name: "CategoryView",
   data() {
@@ -67,19 +83,35 @@ export default {
         }
       });
     },
-    handleAvatarSuccess(res, file) {
-      if (res.code === 200) {
-        this.userForm.icon_url = res.data.image;
-      } else {
-        this.$message.error(`图片上传失败:${res.message}`);
-      }
+    UploadImage(param) {
+      const formData = new FormData();
+      formData.append("file", param.file);
+      postRequest("/file/uploadFast", formData)
+        .then((resp) => {
+          console.log("上传图片成功");
+          this.icon_url = resp.obj.filePath;
+          param.onSuccess(); // 上传成功的图片会显示绿色的对勾
+          // 但是我们上传成功了图片， fileList 里面的值却没有改变，还好有on-change指令可以使用
+        })
+        .catch((resp) => {
+          console.log("图片上传失败");
+          param.onError();
+        });
     },
+    fileChange(file) {
+      this.$refs.upload.clearFiles(); //清除文件对象
+      this.logo = file.raw; // 取出上传文件的对象，在其它地方也可以使用
+      this.fileArr = [{ name: file.name, url: file.url }]; // 重新手动赋值filstList， 免得自定义上传成功了, 而fileList并没有动态改变， 这样每次都是上传一个对象
+    },
+
     saveUserInfo() {
-      getRequest("/blog/user/update").then((resp) => {
-        console.log(":@@@@@@@@@@:" + resp.icon);
+      console.log(":@@@@@@@@@@:" + this.userForm);
+      postRequest("/blog/user/update", this.userForm).then((resp) => {
+        console.log(":@@@@@@@@@@:" + resp);
         if (resp) {
-          this.userForm.icon_url = resp.icon;
-          this.fileArr = [{ url: this.userForm.icon_url }];
+          this.$router.replace({
+            name: "IndexPage",
+          });
         }
       });
     },
@@ -104,7 +136,7 @@ export default {
   position: relative;
   overflow: hidden;
 }
-.body {
+.userBody {
   float: left;
   width: 100%;
 }
@@ -129,6 +161,10 @@ export default {
   float: left;
   text-align: center;
   width: 40%;
+}
+.username {
+  float: none;
+  width: 30%;
 }
 .avatar {
   width: 178px;
