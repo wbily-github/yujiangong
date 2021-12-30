@@ -106,8 +106,8 @@ export default {
           this.loading = true;
           postRequest("/blog/login/login", this.loginForm).then((resp) => {
             console.log(":@@@@@@@@@@:" + resp);
+            this.loading = false;
             if (resp.obj) {
-              this.loading = false;
               const tokenStr = resp.obj.tokenHead + resp.obj.token;
               //存到session里
               window.sessionStorage.setItem("tokenStr", tokenStr);
@@ -116,8 +116,6 @@ export default {
               this.$router.replace({
                 name: "IndexPage",
               });
-            } else {
-              this.loading = false;
             }
           });
         } else {
