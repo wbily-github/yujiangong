@@ -7,7 +7,6 @@
         <el-form
           ref="userForm"
           :model="userForm"
-          :rules="userRules"
           label-width="80px"
           class="login-box"
         >
@@ -21,7 +20,7 @@
             ></el-input>
           </el-form-item>
 
-          <el-form-item label="用户名" prop="icon">
+          <el-form-item label="头像" prop="icon">
             <el-upload
               class="upload-demo"
               ref="upload"
