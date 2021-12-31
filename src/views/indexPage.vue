@@ -107,7 +107,7 @@
           <el-table-column
             prop="author"
             label="作者"
-            width="180"
+            width="130"
             align="center"
           >
           </el-table-column>
@@ -229,7 +229,7 @@ export default {
 
 <style scoped>
 .bodyResult {
-  width: 1080px;
+  width: 1030px;
   height: 500px;
   margin: auto;
   background-color: #3f5c6d2c;
@@ -251,9 +251,8 @@ export default {
   color: crimson;
   font-size: 200%;
   text-align: center;
-  width: 98.73%;
-  height: 120%;
-
+  width: 98.4%;
+  height: 180%;
   position: absolute;
   background: url("../assets/index.jpg") center center no-repeat;
   background-repeat: no-repeat;

@@ -131,7 +131,7 @@ export default {
 <style>
 .index {
   position: absolute;
-  width: 95.35%;
+  width: 94.5%;
   height: 100%;
   padding: 10px 35px 10px 35px;
   background-image: url("../assets/giegie.png");

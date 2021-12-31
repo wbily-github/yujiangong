@@ -1,9 +1,12 @@
 <template>
   <div id="app">
-    <router-view/>
+    <router-view />
   </div>
 </template>
 
-<style>
+<script>
+const ip = "www.ilan.ltd";
+</script>
 
+<style>
 </style>
