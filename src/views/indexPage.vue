@@ -5,7 +5,17 @@
         <li><a @click="toActive">动态</a><b>|</b></li>
         <li><a @click="toHelp">帮助</a><b>|</b></li>
         <li><a @click="toHelp">联系站长</a></li>
+        <li class="lf2" style="fontsize: 200px color : #3f5c6d2c">
+          <i class="el-icon-setting" @click="toSetting">&nbsp</i>
+        </li>
+        <li class="lf2" style="fontsize: 200px color : #3f5c6d2c">
+          <i class="el-icon-switch-button" @click="exit">&nbsp</i>
+        </li>
 
+        <li class="lf1"></li>
+        <li class="lf1">
+          <a>{{ name }}&nbsp</a>
+        </li>
         <li class="lf1">
           <img
             :src="icon"
@@ -19,9 +29,6 @@
             "
           />
           <!--  <avatar username="name"></avatar> -->
-        </li>
-        <li class="lf1">
-          <a>欢迎登录：{{ name }}&nbsp</a>
         </li>
       </ul>
     </div>
@@ -169,9 +176,7 @@ export default {
       },
     };
   },
-  /*   computed: {icon(){
-    return "101.42.232.134/group1/M00/00/00/CgAYCWHQKNeAH3vfAAAawYvfAgg150.jpg"
-  }}, */
+
   mounted: function () {
     this.cxqq.size = this.pagesize;
     this.cxqq.page = this.currentPage;
@@ -189,6 +194,20 @@ export default {
     },
     toHelp() {
       alert("该功能暂未开发！");
+    },
+    toSetting() {
+      alert("该功能暂未开发！");
+    },
+    exit() {
+      postRequest("/blog/logout").then((resp) => {
+        console.log(":@@@@@@@@@@:" + resp);
+        if (resp) {
+          window.sessionStorage.clear();
+          this.$router.push({
+            name: "Login",
+          });
+        }
+      });
     },
     toActive() {
       this.$router.push({
@@ -251,7 +270,6 @@ export default {
 }
 
 .indexBody {
-  color: crimson;
   font-size: 200%;
   text-align: center;
   width: 98.4%;
@@ -265,6 +283,7 @@ export default {
   padding: 10px;
 }
 .header {
+  background-color: aliceblue;
   font-size: 50%;
 }
 #ul,
@@ -273,7 +292,8 @@ li {
   display: block;
   margin: 0, 0, 0, 10px;
 }
-.lf1 {
+.lf1,
+.lf2 {
   float: right;
   display: block;
   margin: 0, 0, 0, 10px;

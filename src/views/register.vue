@@ -10,7 +10,7 @@
       :center="true"
       class="tankuang"
     >
-      <h1 @click="back" class="tiaozhuan">注册成功！点我去登录</h1>
+      <h1 @click="backTologin" class="tiaozhuan">注册成功！点我去登录</h1>
     </el-dialog>
     <div class="left">
       <el-form
@@ -104,7 +104,7 @@ export default {
         }
       });
     },
-    back() {
+    backToLogin() {
       this.$router.push({
         name: "Login",
       });
@@ -113,7 +113,6 @@ export default {
       this.captchaUrl = "/blog/captcha?time" + new Date();
     },
     submit() {
-      
       this.$refs.registerForm.validate((valid) => {
         if (valid) {
           postRequest("/blog/login/register", this.registerForm).then(
