@@ -148,7 +148,7 @@ export default {
       /*  "http://www.ilan.ltd/group1/M00/00/00/CgAYCWHQKNeAH3vfAAAawYvfAgg150.jpg", */
       icon:
         null == window.sessionStorage.getItem("icon")
-          ? "101.42.232.134/group1/M00/00/00/CgAYCWHQKNeAH3vfAAAawYvfAgg150.jpg"
+          ? "http://www.ilan.ltd/group1/M00/00/01/CgAYCWHQT3iAQlvIAAA7TqMmxYw358.jpg"
           : window.sessionStorage.getItem("icon"),
       cxqq: {
         title: "",
