@@ -14,7 +14,7 @@ proxyObj['/'] = {
 module.exports = {
     devServer: {
         host: "localhost",
-        port: 8099,
+        port: 80,
         proxy: proxyObj
     }
 }

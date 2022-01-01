@@ -8,7 +8,7 @@
 
         <li class="lf1">
           <img
-            v-bind:src="icon"
+            :src="icon"
             @click="toUserInfo"
             style="
               width: 30px;
@@ -138,11 +138,11 @@ export default {
   data() {
     return {
       name: window.sessionStorage.getItem("username"),
+      /*  "http://www.ilan.ltd/group1/M00/00/00/CgAYCWHQKNeAH3vfAAAawYvfAgg150.jpg", */
       icon:
         null == window.sessionStorage.getItem("icon")
-          ? "https://img2.baidu.com/it/u=3683141353,2044374394&fm=26&fmt=auto"
-          : /*           "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2Ftx20%2F51041101418690.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1643165630&t=9fd3a57bb398957a4a31a60eddf64871"
-             */ window.sessionStorage.getItem("icon"),
+          ? "101.42.232.134/group1/M00/00/00/CgAYCWHQKNeAH3vfAAAawYvfAgg150.jpg"
+          : window.sessionStorage.getItem("icon"),
       cxqq: {
         title: "",
         size: 10,
@@ -169,6 +169,9 @@ export default {
       },
     };
   },
+  /*   computed: {icon(){
+    return "101.42.232.134/group1/M00/00/00/CgAYCWHQKNeAH3vfAAAawYvfAgg150.jpg"
+  }}, */
   mounted: function () {
     this.cxqq.size = this.pagesize;
     this.cxqq.page = this.currentPage;

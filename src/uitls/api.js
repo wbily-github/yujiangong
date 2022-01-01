@@ -69,16 +69,16 @@ axios.interceptors.response.use(success => {
 export const postRequest = (url, params) => {
     return axios({
         method: 'post',
-       // url: 'http://101.42.232.134:8099' + url,
-       url: 'http://localhost:8080' + url,
+        url: 'http://www.ilan.ltd' + url,
+     //  url: 'http://localhost:80' + url,
         data: params
     })
 }
 export const getRequest = (url, params) => {
     return axios({
         method: 'get',
-       // url: 'http://101.42.232.134:8099' + url,
-       url: 'http://localhost:8080' + url,
+        url: 'http://www.ilan.ltd' + url,
+      // url: 'http://localhost:80' + url,
         data: params
     })
 }

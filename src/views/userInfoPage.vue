@@ -78,7 +78,8 @@ export default {
         if (resp) {
           this.userForm = resp;
           this.userForm.icon_url = resp.icon;
-          this.fileArr = [{ url: this.userForm.icon_url }];
+          this.$refs.upload.clearFiles(); //清除文件对象
+          this.fileArr = [{ name: "icon", url: resp.icon }];
         }
       });
     },
@@ -88,7 +89,7 @@ export default {
       postRequest("/file/uploadFast", formData)
         .then((resp) => {
           console.log("上传图片成功");
-          this.icon_url = resp.obj.filePath;
+          this.userForm.icon_url = resp.obj.filePath;
           param.onSuccess(); // 上传成功的图片会显示绿色的对勾
           // 但是我们上传成功了图片， fileList 里面的值却没有改变，还好有on-change指令可以使用
         })
@@ -105,9 +106,15 @@ export default {
 
     saveUserInfo() {
       console.log(":@@@@@@@@@@:" + this.userForm);
+      this.userForm.icon = this.userForm.icon_url;
       postRequest("/blog/user/update", this.userForm).then((resp) => {
         console.log(":@@@@@@@@@@:" + resp);
         if (resp) {
+          const tokenStr = resp.obj.tokenHead + resp.obj.token;
+          window.sessionStorage.setItem("tokenStr", tokenStr);
+          window.sessionStorage.setItem("username", resp.obj.username);
+          console.log("@#$%^&)*&^%%%%%%%%%%%%#^&^", resp.obj.icon);
+          window.sessionStorage.setItem("icon", resp.obj.icon);
           this.$router.replace({
             name: "IndexPage",
           });

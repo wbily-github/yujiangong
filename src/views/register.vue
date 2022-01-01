@@ -113,6 +113,7 @@ export default {
       this.captchaUrl = "/blog/captcha?time" + new Date();
     },
     submit() {
+      
       this.$refs.registerForm.validate((valid) => {
         if (valid) {
           postRequest("/blog/login/register", this.registerForm).then(
