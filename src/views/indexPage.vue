@@ -12,7 +12,6 @@
           <i class="el-icon-switch-button" @click="exit">&nbsp</i>
         </li>
 
-        <li class="lf1"></li>
         <li class="lf1">
           <a>{{ name }}&nbsp</a>
         </li>
