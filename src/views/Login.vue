@@ -178,7 +178,7 @@ export default {
 .erweima {
   float: right;
   text-align: center;
-  margin-top: 25px;
+  margin-top: 50px;
   margin-right: 128px;
 }
 .el-form-item__content {
