@@ -40,7 +40,6 @@
           <el-button @click="saveUserInfo">保存</el-button>
         </el-form>
       </div>
-      <div class="right">{{ fileArr }}</div>
     </div>
   </div>
 </template>
@@ -131,7 +130,7 @@ export default {
   width: 95.35%;
   height: 800%;
   padding: 10px 35px 10px 35px;
-  background-image: url("../assets/giegie.png");
+  background-image: url("https://img0.baidu.com/it/u=120612477,1050689788&fm=26&fmt=auto");
   background-size: 100%;
   background-repeat: no-repeat;
 }

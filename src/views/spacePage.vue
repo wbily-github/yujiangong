@@ -8,39 +8,147 @@
       backgroundRepeat: 'no-repeat',
     }"
   >
-    <div class="header">
-      <ul class="lf">
-        <li class="lf1" style="fontsize: 200px color : #3f5c6d2c">
-          <i class="el-icon-setting" @click="toSetting">&nbsp</i>
-        </li>
-        <li class="lf1" style="fontsize: 200px color : #3f5c6d2c">
-          <i class="el-icon-switch-button" @click="exit">&nbsp</i>
-        </li>
+    <el-container direction="vertical">
+      <!--   <el-header class="header_login">
+        <div class="header">
+         
+        </div>
+      </el-header> -->
+      <el-header class="space_el_header">
+        <div class="space_header">
+          <div class="head-bar">
+            <div class="lf2">
+              <li class="li1">{{ date }}</li>
+              <li class="li1">&nbsp;{{ tianqi }}</li>
+            </div>
+          </div>
+          <div>
+            <ul class="space_header_daohang">
+              <li class="tabs-item">
+                <a @click="toSetting">首页</a>
+              </li>
+              <li class="tabs-item">
+                <a @click="toIndex">留言</a>
+              </li>
+              <li class="tabs-item">
+                <a @click="toSetting">活动</a>
+              </li>
+              <li class="tabs-item">
+                <a @click="toSetting">应用</a>
+              </li>
+            </ul>
+          </div>
 
-        <li class="lf1">
-          <a>{{ name }}&nbsp</a>
-        </li>
-        <li class="lf1">
-          <img
-            :src="icon"
-            @click="toUserInfo"
-            style="
-              width: 30px;
-              height: 30px;
-              overflow: hidden;
-              border-radius: 50%;
-              margin-top: -8px;
-            "
-          />
-          <!--  <avatar username="name"></avatar> -->
-        </li>
-      </ul>
-      <div class="lf2">
-        <li class="li1">{{ date }}</li>
-        <li class="li1">&nbsp{{ tianqi }}</li>
-      </div>
-    </div>
-    <div class="body">姐姐怀中惊坐起，SP竟是我自己</div>
+          <div class="search-box">
+            <form action="https://www.ilan.ltd/search">
+              <div class="search-box__inner">
+                <input
+                  type="hidden"
+                  name="identification"
+                  value="1641395835589"
+                />
+                <input type="hidden" name="scope" value="blog" />
+                <input
+                  class="search-box__input"
+                  aria-label="搜索"
+                  placeholder="大家都在搜..."
+                  name="q"
+                  value=""
+                  type="text"
+                  required=""
+                />
+                <i type="submit" class="el-icon-search"> </i>
+              </div>
+            </form>
+          </div>
+          <div class="space_header_right">
+            <ul class="lf">
+              <li class="lf1" style="fontsize: 200px color : #3f5c6d2c">
+                <i class="el-icon-setting" @click="toSetting">&nbsp;</i>
+              </li>
+              <li class="lf1" style="fontsize: 200px color : #3f5c6d2c">
+                <i class="el-icon-switch-button" @click="exit">&nbsp;</i>
+              </li>
+
+              <li class="lf1">
+                <a>{{ name }}&nbsp;</a>
+              </li>
+              <li class="lf1">
+                <img
+                  :src="icon"
+                  @click="toUserInfo"
+                  style="
+                    width: 30px;
+                    height: 30px;
+                    overflow: hidden;
+                    border-radius: 50%;
+                    margin-top: -5px;
+                  "
+                />
+              </li>
+            </ul>
+          </div>
+        </div>
+      </el-header>
+      <el-main class="login_body">
+        <div class="body">姐姐怀中惊坐起，SP竟是我自己</div>
+      </el-main>
+      <el-footer>
+        <p class="copyright_link">
+          <a
+            href="http://www.ilan.ltd/#/indexPage"
+            target="_blank"
+            onclick="TCISD.pv('ihome.qzone.qq.com','bottom.suggestion');"
+            >反馈建议</a
+          >
+          |
+          <a
+            href="http://www.ilan.ltd/#/indexPage"
+            onclick="TCISD.pv('ihome.qzone.qq.com','bottom.actqzone');"
+            target="_blank"
+            >空间活动</a
+          >
+          |
+          <a
+            href="http://www.ilan.ltd/#/indexPage"
+            onclick="TCISD.pv('ihome.qzone.qq.com','bottom.app');"
+            target="_blank"
+            >空间应用</a
+          >
+          |
+          <a
+            href="http://www.ilan.ltd/#/indexPage"
+            onclick="TCISD.pv('ihome.qzone.qq.com','bottom.original');"
+            target="_blank"
+            >成为会员</a
+          >
+          |
+          <a
+            href="http://www.ilan.ltd/#/indexPage"
+            onclick="TCISD.pv('ihome.qzone.qq.com','bottom.qqlogin');"
+            target="_blank"
+            >空间登录</a
+          >
+          |
+          <a
+            href="http://www.ilan.ltd/#/indexPage"
+            onclick="TCISD.pv('ihome.qzone.qq.com','bottom.socialpackage');"
+            >pc版下载</a
+          >
+          |
+          <a
+            href="http://www.ilan.ltd/#/indexPage"
+            onclick="TCISD.pv('ihome.qzone.qq.com','bottom.complaint');"
+            target="_blank"
+            >关于我们</a
+          >
+        </p>
+
+        <p class="copyright_cn">
+          冀公网安备 13053402000396号&nbsp;冀ICP备2021028982号-1
+        </p>
+      </el-footer>
+    </el-container>
   </div>
 </template>
 <script>
@@ -73,6 +181,11 @@ export default {
   methods: {
     toSetting() {
       alert("该功能暂未开发！");
+    },
+    toIndex() {
+      this.$router.push({
+        name: "IndexPage",
+      });
     },
     exit() {
       postRequest("/blog/logout").then((resp) => {
@@ -137,23 +250,54 @@ export default {
 <style>
 .indexBack {
   width: 98.67%;
-  height: 180.35%;
-
+  height: 98%;
+  top: 0;
+  left: 0;
   font-size: 200%;
   text-align: center;
   position: absolute;
   padding: 10px;
 }
-.header {
-  font-size: 50%;
+.el-container {
+  width: 100%;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
-.shenghua {
-  text-align: center;
-  font-size: 180%;
-  color: blueviolet;
-  width: 1250px;
-  height: 700px;
-  margin-top: 20px;
+.space_header {
+  margin-top: -35px;
+}
+.space_el_header {
+  margin-top: -10px;
+  margin-left: -10px;
+  margin-right: -10px;
+  height: 40px !important;
+  color: aliceblue;
+  background: black;
+}
+.space_header_right {
+  font-size: 80%;
+  margin-top: -10px;
+  float: right;
+}
+.el-main {
+  height: 100%;
+  overflow: hidden;
+}
+.el-footer {
+  height: 4vh;
+  width: 100%;
+  align-items: center;
+  font-size: 25%;
+}
+.tabs-item {
+  font-size: 50%;
+  float: left;
+  margin: 10px;
+}
+.el-icon-search {
+  font-size: 56%;
 }
 .lf {
   margin-top: -15px;
@@ -165,10 +309,11 @@ export default {
   margin: 0, 0, 0, -10px;
 }
 .lf2 {
-  font-size: 80%;
+  font-size: 45%;
   float: left;
   display: block;
-  margin: 0, 0, 0, 0px;
+  margin-top: 7px;
+  margin-right: 20px;
 }
 .li1 {
   list-style: none;

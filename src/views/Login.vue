@@ -6,54 +6,64 @@
     element-loading-spinner="el-icon-loading"
     element-loading-background="rpba(0,0,0,0.8)"
   >
-    <div class="left1">
-      <el-form
-        :rules="rules"
-        ref="loginForm"
-        :model="loginForm"
-        class="loginContain"
-      >
-        <h3 class="loginTitle">欢迎来到LovelySpecialPerson广场</h3>
-        <el-form-item prop="username">
-          <el-input
-            type="text"
-            auto-complete="false"
-            v-model="loginForm.username"
-            placeholder="用戶名"
-          ></el-input>
-        </el-form-item>
-        <el-form-item prop="password">
-          <el-input
-            type="password"
-            auto-complete="false"
-            v-model="loginForm.password"
-            placeholder="密码"
-          ></el-input>
-        </el-form-item>
-        <el-form-item prop="code">
-          <el-input
-            type="text"
-            auto-complete="false"
-            v-model="loginForm.code"
-            placeholder="验证码"
-            style="width: 250px; margin: 0px 0px 0px 0px"
-          ></el-input>
-          <img :src="captchaUrl" @click="updateCaptcha" />
-        </el-form-item>
-        <el-checkbox type="checked" calss="loginRemember">记住密码</el-checkbox>
-        <el-button type="primary" class="loginSubmit" @click="submit"
-          >登录</el-button
-        >
-        <div class="reg">
-          <a @click="register">没有账号？去注册~</a>
+    <el-container direction="vertical">
+      <el-header class="header_login"> 这是一个导航栏 </el-header>
+      <el-main class="login_body">
+        <div class="logform">
+          <el-form
+            :rules="rules"
+            ref="loginForm"
+            :model="loginForm"
+            class="loginContain"
+          >
+            <h3 class="loginTitle">欢迎来到LovelySpecialPerson广场</h3>
+            <el-form-item prop="username">
+              <el-input
+                type="text"
+                auto-complete="false"
+                v-model="loginForm.username"
+                placeholder="用戶名"
+              ></el-input>
+            </el-form-item>
+            <el-form-item prop="password">
+              <el-input
+                type="password"
+                auto-complete="false"
+                v-model="loginForm.password"
+                placeholder="密码"
+              ></el-input>
+            </el-form-item>
+            <el-form-item prop="code">
+              <el-input
+                type="text"
+                auto-complete="false"
+                v-model="loginForm.code"
+                placeholder="验证码"
+                style="width: 250px; margin: 0px 0px 0px 0px"
+              ></el-input>
+              <img :src="captchaUrl" @click="updateCaptcha" />
+            </el-form-item>
+            <el-checkbox type="checked" calss="loginRemember"
+              >记住密码</el-checkbox
+            >
+            <el-button type="primary" class="loginSubmit" @click="submit"
+              >登录</el-button
+            >
+            <div class="reg">
+              <a @click="register">没有账号？去注册~</a>
+            </div>
+          </el-form>
         </div>
-      </el-form>
-    </div>
-    <div class="right1">
-      今日份热点：
-      <h2>&nbsp;{{ title }}</h2>
-      <h3 class="redian">&nbsp;&nbsp;{{ content }}</h3>
-    </div>
+        <div class="erweima">
+          &nbsp;&nbsp;
+          <img
+            src="http://www.ilan.ltd/group1/M00/00/01/CgAYCWHU9COAE_WUAABG2Ev4CJ4911.jpg"
+          />
+          <h3 style="">扫码使用手机登录</h3>
+        </div>
+      </el-main>
+      <el-footer class="footer_login"> </el-footer>
+    </el-container>
   </div>
 </template>
 <script>
@@ -78,19 +88,8 @@ export default {
       },
     };
   },
-  mounted: function () {
-    this.getHot();
-  },
+  mounted: function () {},
   methods: {
-    getHot() {
-      postRequest("/blog/login/getHot").then((resp) => {
-        console.log(":@@@@@@@@@@:" + resp.obj.title);
-        if (resp.obj) {
-          this.title = resp.obj.title;
-          this.content = resp.obj.content;
-        }
-      });
-    },
     updateCaptcha() {
       this.captchaUrl = "/blog/captcha?time" + new Date();
     },
@@ -100,22 +99,19 @@ export default {
       });
     },
     submit() {
-      console.log("QQQQQQQQQQQQQQQQQQQQ", this.loginForm);
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
           this.loading = true;
           postRequest("/blog/login/login", this.loginForm).then((resp) => {
-            console.log(":@@@@@@@@@@:" + resp);
             this.loading = false;
             if (resp.obj) {
               const tokenStr = resp.obj.tokenHead + resp.obj.token;
               //存到session里
               window.sessionStorage.setItem("tokenStr", tokenStr);
               window.sessionStorage.setItem("username", resp.obj.username);
-              console.log("@#$%^&)*&^%%%%%%%%%%%%#^&^", resp.obj.icon);
               window.sessionStorage.setItem("icon", resp.obj.icon);
               this.$router.replace({
-                name: "IndexPage",
+                name: "spacePage",
               });
             }
           });
@@ -131,30 +127,35 @@ export default {
 
 <style>
 .index {
+  background-image: url("https://img0.baidu.com/it/u=120612477,1050689788&fm=26&fmt=auto");
   position: absolute;
-  width: 94.5%;
+  width: 100%;
   height: 100%;
   padding: 10px 35px 10px 35px;
-  background-image: url("../assets/giegie.png");
   background-size: 100%;
   background-repeat: no-repeat;
+  margin: 0 auto;
+}
+.logform {
+  margin-top: -100px;
 }
 .loginContain {
-  margin: 10%;
-  border-radius: 15px;
-  background-clip: padding-box;
-  height: 390px;
-  width: 350px;
-  padding: 10px 25px 10px 35px;
+  height: 120px;
+  width: 80px;
   background-color: rgba(0, 0, 0, 0.3);
   border: 1px black;
+  float: right;
 }
 .redian {
   color: blue;
 }
+/* .redian1 {
+  color: blue;
+  float: right;
+} */
 .loginTitle {
   color: red;
-  margin: 0px auto 30px auto;
+  margin: 0px auto 10px auto;
   text-align: center;
 }
 .loginSubmit {
@@ -170,16 +171,29 @@ export default {
   text-align: left;
   margin: 0px 0px 0px 0px;
 }
-.left1 {
-  float: left;
-}
-
-.right1 {
+/* .login_body1 {
+  margin-right: 50px;
+  align-items: center;
+} */
+.erweima {
   float: right;
-  margin-right: 88px;
+  text-align: center;
+  margin-top: 25px;
+  margin-right: 128px;
 }
 .el-form-item__content {
   display: flex;
   align-items: center;
+}
+
+.footer_login {
+  font-size: 50%;
+
+  height: 4vh;
+  width: 100%;
+  align-items: center;
+}
+.header_login {
+  text-align: center;
 }
 </style>
