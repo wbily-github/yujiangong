@@ -9,11 +9,6 @@
     }"
   >
     <el-container direction="vertical">
-      <!--   <el-header class="header_login">
-        <div class="header">
-         
-        </div>
-      </el-header> -->
       <el-header class="space_el_header">
         <div class="space_header">
           <div class="head-bar">
@@ -38,7 +33,6 @@
               </li>
             </ul>
           </div>
-
           <div class="search-box">
             <form action="https://www.ilan.ltd/search">
               <div class="search-box__inner">
@@ -69,7 +63,9 @@
               <li class="lf1" style="fontsize: 200px color : #3f5c6d2c">
                 <i class="el-icon-switch-button" @click="exit">&nbsp;</i>
               </li>
-
+              <li class="lf1" style="fontsize: 200px color : #3f5c6d2c">
+                <i class="el-icon-message" @click="toMessage">&nbsp;</i>
+              </li>
               <li class="lf1">
                 <a>{{ name }}&nbsp;</a>
               </li>
@@ -90,10 +86,83 @@
           </div>
         </div>
       </el-header>
-      <el-main class="login_body">
-        <div class="body">姐姐怀中惊坐起，SP竟是我自己</div>
-      </el-main>
-      <el-footer>
+      <el-container style="flex-direction: row">
+        <el-aside width="15%">
+          <el-menu class="el-menu-space-left">
+            <el-menu-item><i class="el-icon-share"></i>好友动态</el-menu-item>
+            <el-menu-item><i class="el-icon-s-home"></i>我的空间</el-menu-item>
+            <el-menu-item><i class="el-icon-picture"></i>我的相册</el-menu-item>
+            <el-menu-item><i class="el-icon-menu"></i>我的应用</el-menu-item>
+          </el-menu>
+          <div class="guanggao1">
+            <img
+              src="http://www.ilan.ltd/group1/M00/00/01/CgAYCWHWnB2AKqN5AAAqUrTzAss324.jpg"
+              style="width: 89%; height: 160%; margin-left: -55px"
+            />
+          </div>
+        </el-aside>
+        <el-main class="space_body">
+          <div class="space-activity-insert">
+            <el-input
+              v-model="article.content"
+              type="textarea"
+              autosize=""
+              placeholder="说点什么吧..."
+              style="height: 50px"
+            ></el-input>
+            <div v-show="isShowImg">
+              <el-upload
+                ref="upload"
+                :class="{ hideShow: false }"
+                action="string"
+                list-type="picture-card"
+                :on-change="fileChange"
+                :http-request="UploadImage"
+                :file-list="urlArr"
+              >
+                <!--  <el-button
+                  size="mini"
+                  type="primary"
+                  icon="el-icon-upload2"
+                  @click="UploadImage()"
+                  style="margin-left: 10px"
+                ></el-button> -->
+              </el-upload>
+              <el-button @click="saveActivity"> 发表</el-button>
+            </div>
+          </div>
+          <div style="height: 580px; overflow: auto">
+            <div
+              v-for="(items, index) in activityList"
+              :key="(items, index)"
+              style="margin-top: 120px"
+            >
+              <div class="author-style">
+                <img
+                  :src="items.author.icon"
+                  @click="toUserInfo"
+                  style="
+                    width: 30px;
+                    height: 30px;
+                    overflow: hidden;
+                    border-radius: 50%;
+                    margin-top: -5px;
+                  "
+                />{{ items.author.username }}&nbsp;{{ items.createTime }}
+              </div>
+              <div class="arcitle-style">
+                <div>&nbsp;&nbsp;{{ items.content }}</div>
+                <img
+                  style="width: 150px; height: 150px; margin-left: 50px"
+                  :src="items.img"
+                />
+              </div>
+            </div>
+          </div>
+        </el-main>
+        <el-aside width="15%">Aside</el-aside>
+      </el-container>
+      <el-footer class="space_el_footer">
         <p class="copyright_link">
           <a
             href="http://www.ilan.ltd/#/indexPage"
@@ -166,20 +235,62 @@ export default {
           ? "https://img2.baidu.com/it/u=3683141353,2044374394&fm=26&fmt=auto"
           : window.sessionStorage.getItem("icon"),
       back: "http://101.42.232.134/group1/M00/00/00/CgAYCWHKwi2AQog0AAQzBCR7_yY357.jpg",
-      backType: "",
       ip: "",
       date: "",
-      weatherToday: {},
       tianqi: "",
-      ip: "",
+      isShowImg: true,
+      urlArr: [],
+      article: {
+        author: {
+          username: "ilan",
+          icon: "https://img2.baidu.com/it/u=3683141353,2044374394&fm=26&fmt=auto",
+        },
+        content: "",
+        imgs: [],
+      },
+      activityList: [
+        {
+          author: {
+            username: "ilan",
+            icon: "https://img2.baidu.com/it/u=3683141353,2044374394&fm=26&fmt=auto",
+          },
+          createTime: "2022-01-06 16:45",
+          title: "",
+          content:
+            "哈哈哈哈笑死我了,张三吃碗炸酱面，使我不得开心颜，李四偷吃打卤面，至今没有被发现",
+          img: "http://101.42.232.134/group1/M00/00/00/CgAYCWHKwi2AQog0AAQzBCR7_yY357.jpg",
+        },
+        {
+          author: {
+            username: "ilan",
+            icon: "https://img2.baidu.com/it/u=3683141353,2044374394&fm=26&fmt=auto",
+          },
+          createTime: "2022-01-06 16:45",
+          title: "",
+          content: "哈哈哈哈笑死我了",
+          img: "http://101.42.232.134/group1/M00/00/00/CgAYCWHKwi2AQog0AAQzBCR7_yY357.jpg",
+        },
+        {
+          author: {
+            username: "ilan",
+            icon: "https://img2.baidu.com/it/u=3683141353,2044374394&fm=26&fmt=auto",
+          },
+          createTime: "2022-01-06 16:45",
+          title: "",
+          content: "哈哈哈哈笑死我了",
+          img: "http://101.42.232.134/group1/M00/00/00/CgAYCWHKwi2AQog0AAQzBCR7_yY357.jpg",
+        },
+      ],
     };
   },
   mounted: function () {
     this.getTianQi();
   },
-
   methods: {
     toSetting() {
+      alert("该功能暂未开发！");
+    },
+    toMessage() {
       alert("该功能暂未开发！");
     },
     toIndex() {
@@ -202,6 +313,36 @@ export default {
     toUserInfo() {
       this.$router.push({
         name: "userInfoPage",
+      });
+    },
+    UploadImage(param) {
+      const formData = new FormData();
+      formData.append("file", param.file);
+      postRequest("/file/uploadFast", formData)
+        .then((resp) => {
+          console.log("上传图片成功");
+          const imgs = new Array();
+          imgs.push(resp.obj.filePath);
+          this.arcitle.imgs = imgs;
+          param.onSuccess(); // 上传成功的图片会显示绿色的对勾
+          // 但是我们上传成功了图片， fileList 里面的值却没有改变，还好有on-change指令可以使用
+        })
+        .catch((resp) => {
+          console.log("图片上传失败");
+          param.onError();
+        });
+    },
+    fileChange(file) {
+      this.$refs.upload.clearFiles(); //清除文件对象
+      this.logo = file.raw; // 取出上传文件的对象，在其它地方也可以使用
+      this.urlArr = [{ name: file.name, url: file.url }]; // 重新手动赋值filstList， 免得自定义上传成功了, 而fileList并没有动态改变， 这样每次都是上传一个对象
+    },
+    //保存日志
+    saveActivity() {
+      //校验输入内容
+      postRequest("/blog/insertArticle", article).then((resp) => {
+        console.log("保存~");
+        alter("发表成功");
       });
     },
     //获取当地城市及天气
@@ -249,8 +390,8 @@ export default {
 
 <style>
 .indexBack {
-  width: 98.67%;
-  height: 98%;
+  width: 98.46%;
+  height: 100%;
   top: 0;
   left: 0;
   font-size: 200%;
@@ -265,15 +406,22 @@ export default {
   flex-direction: column;
   justify-content: space-between;
 }
+.el-space-body {
+  width: 100%;
+}
+
 .space_header {
   margin-top: -35px;
 }
+.space_el_footer,
 .space_el_header {
   margin-top: -10px;
-  margin-left: -10px;
-  margin-right: -10px;
+  margin-left: -8px;
+  margin-right: -8px;
   height: 40px !important;
   color: aliceblue;
+}
+.space_el_header {
   background: black;
 }
 .space_header_right {
@@ -284,6 +432,35 @@ export default {
 .el-main {
   height: 100%;
   overflow: hidden;
+}
+.el-upload {
+  display: inline;
+  text-align: center;
+  cursor: pointer;
+  outline: 0;
+}
+
+.space-activity-insert {
+  width: 80%;
+  height: 50px;
+}
+.el-menu-space-left {
+  width: 80%;
+  height: 50%;
+  opacity: 0.5;
+  margin-top: 20px;
+}
+.arcitle-style {
+  text-align: left;
+  font-size: 65%;
+}
+.author-style {
+  text-align: left;
+  font-size: 50%;
+}
+
+.guanggao1 {
+  height: 30%;
 }
 .el-footer {
   height: 4vh;
