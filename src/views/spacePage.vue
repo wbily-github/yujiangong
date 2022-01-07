@@ -87,51 +87,41 @@
         </div>
       </el-header>
       <el-container style="flex-direction: row">
-        <el-aside width="15%">
+        <el-aside width="15%" style="height: 90%">
           <el-menu class="el-menu-space-left">
             <el-menu-item><i class="el-icon-share"></i>好友动态</el-menu-item>
             <el-menu-item><i class="el-icon-s-home"></i>我的空间</el-menu-item>
             <el-menu-item><i class="el-icon-picture"></i>我的相册</el-menu-item>
             <el-menu-item><i class="el-icon-menu"></i>我的应用</el-menu-item>
           </el-menu>
-          <div class="guanggao1">
-            <img
-              src="http://www.ilan.ltd/group1/M00/00/01/CgAYCWHWnB2AKqN5AAAqUrTzAss324.jpg"
-              style="width: 89%; height: 160%; margin-left: -55px"
-            />
-          </div>
+          <div class="guanggao1"></div>
         </el-aside>
-        <el-main class="space_body">
+        <el-main style="height: 90%">
           <div class="space-activity-insert">
             <el-input
               v-model="article.content"
               type="textarea"
-              autosize=""
+              resize="none"
+              :rows="3"
               placeholder="说点什么吧..."
-              style="height: 50px"
+              style="width: 80%"
             ></el-input>
-            <div v-show="isShowImg">
-              <el-upload
-                ref="upload"
-                :class="{ hideShow: false }"
-                action="string"
-                list-type="picture-card"
-                :on-change="fileChange"
-                :http-request="UploadImage"
-                :file-list="urlArr"
+            <div style="float: right; width: 10%">
+              <i class="el-icon-camera" style="width: 100%"> </i>
+              <el-button @click="saveArticle" style="margin-top: 20px"
+                >发表</el-button
               >
-                <!--  <el-button
-                  size="mini"
-                  type="primary"
-                  icon="el-icon-upload2"
-                  @click="UploadImage()"
-                  style="margin-left: 10px"
-                ></el-button> -->
-              </el-upload>
-              <el-button @click="saveActivity"> 发表</el-button>
             </div>
           </div>
-          <div style="height: 580px; overflow: auto">
+
+          <div
+            style="
+              height: 370px;
+              width: 100%;
+              overflow-y: auto;
+              ocerflow: hidden;
+            "
+          >
             <div
               v-for="(items, index) in activityList"
               :key="(items, index)"
@@ -144,7 +134,6 @@
                   style="
                     width: 30px;
                     height: 30px;
-                    overflow: hidden;
                     border-radius: 50%;
                     margin-top: -5px;
                   "
@@ -160,62 +149,66 @@
             </div>
           </div>
         </el-main>
-        <el-aside width="15%">Aside</el-aside>
       </el-container>
-      <el-footer class="space_el_footer">
-        <p class="copyright_link">
-          <a
-            href="http://www.ilan.ltd/#/indexPage"
-            target="_blank"
-            onclick="TCISD.pv('ihome.qzone.qq.com','bottom.suggestion');"
-            >反馈建议</a
-          >
-          |
-          <a
-            href="http://www.ilan.ltd/#/indexPage"
-            onclick="TCISD.pv('ihome.qzone.qq.com','bottom.actqzone');"
-            target="_blank"
-            >空间活动</a
-          >
-          |
-          <a
-            href="http://www.ilan.ltd/#/indexPage"
-            onclick="TCISD.pv('ihome.qzone.qq.com','bottom.app');"
-            target="_blank"
-            >空间应用</a
-          >
-          |
-          <a
-            href="http://www.ilan.ltd/#/indexPage"
-            onclick="TCISD.pv('ihome.qzone.qq.com','bottom.original');"
-            target="_blank"
-            >成为会员</a
-          >
-          |
-          <a
-            href="http://www.ilan.ltd/#/indexPage"
-            onclick="TCISD.pv('ihome.qzone.qq.com','bottom.qqlogin');"
-            target="_blank"
-            >空间登录</a
-          >
-          |
-          <a
-            href="http://www.ilan.ltd/#/indexPage"
-            onclick="TCISD.pv('ihome.qzone.qq.com','bottom.socialpackage');"
-            >pc版下载</a
-          >
-          |
-          <a
-            href="http://www.ilan.ltd/#/indexPage"
-            onclick="TCISD.pv('ihome.qzone.qq.com','bottom.complaint');"
-            target="_blank"
-            >关于我们</a
-          >
-        </p>
-
-        <p class="copyright_cn">
-          冀公网安备 13053402000396号&nbsp;冀ICP备2021028982号-1
-        </p>
+      <el-footer style="padding: 0 0px; height: 50px">
+        <div class="space_el_footer">
+          <div>
+            <a
+              href="http://www.ilan.ltd/#/indexPage"
+              target="_blank"
+              onclick="TCISD.pv('ihome.qzone.qq.com','bottom.suggestion');"
+              >反馈建议</a
+            >
+            |
+            <a
+              href="http://www.ilan.ltd/#/indexPage"
+              onclick="TCISD.pv('ihome.qzone.qq.com','bottom.actqzone');"
+              target="_blank"
+              >空间活动</a
+            >
+            |
+            <a
+              href="http://www.ilan.ltd/#/indexPage"
+              onclick="TCISD.pv('ihome.qzone.qq.com','bottom.app');"
+              target="_blank"
+              >空间应用</a
+            >
+            |
+            <a
+              href="http://www.ilan.ltd/#/indexPage"
+              onclick="TCISD.pv('ihome.qzone.qq.com','bottom.original');"
+              target="_blank"
+              >成为会员</a
+            >
+            |
+            <a
+              href="http://www.ilan.ltd/#/indexPage"
+              onclick="TCISD.pv('ihome.qzone.qq.com','bottom.qqlogin');"
+              target="_blank"
+              >空间登录</a
+            >
+            |
+            <a
+              href="http://www.ilan.ltd/#/indexPage"
+              onclick="TCISD.pv('ihome.qzone.qq.com','bottom.socialpackage');"
+              >pc版下载</a
+            >
+            |
+            <a
+              href="http://www.ilan.ltd/#/indexPage"
+              onclick="TCISD.pv('ihome.qzone.qq.com','bottom.complaint');"
+              target="_blank"
+              >关于我们</a
+            >
+          </div>
+          <div style="margin-top: 10px">
+            <img
+              data-v-fe7aa2b2=""
+              src="http://www.ilan.ltd/group1/M00/00/01/CgAYCWHXuLKAW9T5AAEuND_1Kh8510.jpg"
+              style="height: 14px"
+            /><a href="http://www.beian.gov.cn">冀ICP备2021028982号-1</a>
+          </div>
+        </div>
       </el-footer>
     </el-container>
   </div>
@@ -238,7 +231,7 @@ export default {
       ip: "",
       date: "",
       tianqi: "",
-      isShowImg: true,
+      isShowImg: false,
       urlArr: [],
       article: {
         author: {
@@ -338,7 +331,7 @@ export default {
       this.urlArr = [{ name: file.name, url: file.url }]; // 重新手动赋值filstList， 免得自定义上传成功了, 而fileList并没有动态改变， 这样每次都是上传一个对象
     },
     //保存日志
-    saveActivity() {
+    saveArticle() {
       //校验输入内容
       postRequest("/blog/insertArticle", article).then((resp) => {
         console.log("保存~");
@@ -391,7 +384,7 @@ export default {
 <style>
 .indexBack {
   width: 98.46%;
-  height: 100%;
+  height: 90.46%;
   top: 0;
   left: 0;
   font-size: 200%;
@@ -413,16 +406,21 @@ export default {
 .space_header {
   margin-top: -35px;
 }
-.space_el_footer,
+
 .space_el_header {
   margin-top: -10px;
   margin-left: -8px;
   margin-right: -8px;
   height: 40px !important;
+  background: black;
   color: aliceblue;
 }
-.space_el_header {
-  background: black;
+.space_el_footer {
+  background: dimgrey;
+  height: 50px !important;
+  width: 100%+7px;
+  margin-left: -6px;
+  color: aliceblue;
 }
 .space_header_right {
   font-size: 80%;
@@ -431,7 +429,6 @@ export default {
 }
 .el-main {
   height: 100%;
-  overflow: hidden;
 }
 .el-upload {
   display: inline;
@@ -441,14 +438,15 @@ export default {
 }
 
 .space-activity-insert {
-  width: 80%;
-  height: 50px;
+  width: 100%;
+  height: 100px;
+  align-items: center;
 }
 .el-menu-space-left {
   width: 80%;
   height: 50%;
   opacity: 0.5;
-  margin-top: 20px;
+  margin-top: 30px;
 }
 .arcitle-style {
   text-align: left;
@@ -458,7 +456,6 @@ export default {
   text-align: left;
   font-size: 50%;
 }
-
 .guanggao1 {
   height: 30%;
 }
@@ -468,6 +465,7 @@ export default {
   align-items: center;
   font-size: 25%;
 }
+
 .tabs-item {
   font-size: 50%;
   float: left;

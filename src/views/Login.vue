@@ -7,7 +7,7 @@
     element-loading-background="rpba(0,0,0,0.8)"
   >
     <el-container direction="vertical">
-      <el-header class="header_login"> 这是一个导航栏 </el-header>
+      <el-header class="header_login"> </el-header>
       <el-main class="login_body">
         <div class="logform">
           <el-form
@@ -62,7 +62,19 @@
           <h3 style="">扫码使用手机登录</h3>
         </div>
       </el-main>
-      <el-footer class="footer_login"> </el-footer>
+      <el-footer>
+        <div class="footer_login1">
+          <a href="http://www.ilan.ltd">ilan空间，梦开始的地方</a>
+        </div>
+        <div class="footer_login">
+          <img
+            data-v-fe7aa2b2=""
+            src="http://www.ilan.ltd/group1/M00/00/01/CgAYCWHXuLKAW9T5AAEuND_1Kh8510.jpg"
+            style="height: 14px"
+          />
+          &nbsp;<a href="http://www.beian.gov.cn">冀ICP备2021028982号-1</a>
+        </div>
+      </el-footer>
     </el-container>
   </div>
 </template>
@@ -129,8 +141,8 @@ export default {
 .index {
   background-image: url("https://img0.baidu.com/it/u=120612477,1050689788&fm=26&fmt=auto");
   position: absolute;
-  width: 100%;
-  height: 100%;
+  width: 94.5%;
+  height: auto;
   padding: 10px 35px 10px 35px;
   background-size: 100%;
   background-repeat: no-repeat;
@@ -185,13 +197,15 @@ export default {
   display: flex;
   align-items: center;
 }
-
+.footer_login1,
 .footer_login {
-  font-size: 50%;
-
-  height: 4vh;
+  height: 8vh;
   width: 100%;
-  align-items: center;
+  font-size: 200%;
+  text-align: center;
+}
+.footer_login1 {
+  margin-bottom: -30px;
 }
 .header_login {
   text-align: center;
