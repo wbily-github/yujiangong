@@ -3,11 +3,23 @@
     class="indexBack"
     :style="{
       backgroundImage: 'url(' + back + ')',
-      backgroundSize: '100% auto',
+      backgroundSize: '100% calc(100vh)',
       backgroundAttachment: 'fixed',
       backgroundRepeat: 'no-repeat',
     }"
   >
+    <el-dialog
+      title="发表日志"
+      :visible.sync="showTankuang"
+      :close-on-click-modal="true"
+      :modal="true"
+      :show-close="true"
+      style="item-align: center"
+      :center="true"
+      class="tankuang"
+    >
+      <button @click="shuaxin">确定</button>
+    </el-dialog>
     <el-container direction="vertical">
       <el-header class="space_el_header">
         <div class="space_header">
@@ -76,7 +88,6 @@
                   style="
                     width: 30px;
                     height: 30px;
-                    overflow: hidden;
                     border-radius: 50%;
                     margin-top: -5px;
                   "
@@ -94,9 +105,8 @@
             <el-menu-item><i class="el-icon-picture"></i>我的相册</el-menu-item>
             <el-menu-item><i class="el-icon-menu"></i>我的应用</el-menu-item>
           </el-menu>
-          <div class="guanggao1"></div>
         </el-aside>
-        <el-main style="height: 90%">
+        <el-main class="space_el_main">
           <div class="space-activity-insert">
             <el-input
               v-model="article.content"
@@ -113,38 +123,48 @@
               >
             </div>
           </div>
-
           <div
             style="
-              height: 370px;
+              height: 353px;
               width: 100%;
-              overflow-y: auto;
-              ocerflow: hidden;
+              border: 1px;
+              overflow-x: hidden;
+              overflow-y: scroll;
+              position: absolute;
+              float: none;
             "
           >
             <div
               v-for="(items, index) in activityList"
               :key="(items, index)"
-              style="margin-top: 120px"
+              style="margin-top: 20px"
             >
-              <div class="author-style">
-                <img
-                  :src="items.author.icon"
-                  @click="toUserInfo"
-                  style="
-                    width: 30px;
-                    height: 30px;
-                    border-radius: 50%;
-                    margin-top: -5px;
-                  "
-                />{{ items.author.username }}&nbsp;{{ items.createTime }}
-              </div>
-              <div class="arcitle-style">
-                <div>&nbsp;&nbsp;{{ items.content }}</div>
-                <img
-                  style="width: 150px; height: 150px; margin-left: 50px"
-                  :src="items.img"
-                />
+              <div style="clear: both">
+                <div class="author-style">
+                  <img
+                    :src="items.author.icon"
+                    @click="toUserInfo"
+                    style="
+                      width: 30px;
+                      height: 30px;
+                      border-radius: 50%;
+                      margin-top: -5px;
+                    "
+                  />{{ items.author.username }}&nbsp;{{ items.createTime }}
+                </div>
+                <div class="arcitle-style">
+                  <div>&nbsp;&nbsp;{{ items.content }}</div>
+                  <div
+                    class="artimg"
+                    v-for="(im, index) in items.imgs"
+                    :key="(im, index)"
+                  >
+                    <img
+                      style="width: 150px; height: 150px; margin-left: 50px"
+                      :src="im.url"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -219,6 +239,7 @@ import { postRequest } from "../uitls/api";
 export default {
   data() {
     return {
+      showTankuang: false,
       name:
         null == window.sessionStorage.getItem("username")
           ? "佚名"
@@ -234,10 +255,7 @@ export default {
       isShowImg: false,
       urlArr: [],
       article: {
-        author: {
-          username: "ilan",
-          icon: "https://img2.baidu.com/it/u=3683141353,2044374394&fm=26&fmt=auto",
-        },
+        username: "",
         content: "",
         imgs: [],
       },
@@ -251,33 +269,16 @@ export default {
           title: "",
           content:
             "哈哈哈哈笑死我了,张三吃碗炸酱面，使我不得开心颜，李四偷吃打卤面，至今没有被发现",
-          img: "http://101.42.232.134/group1/M00/00/00/CgAYCWHKwi2AQog0AAQzBCR7_yY357.jpg",
-        },
-        {
-          author: {
-            username: "ilan",
-            icon: "https://img2.baidu.com/it/u=3683141353,2044374394&fm=26&fmt=auto",
-          },
-          createTime: "2022-01-06 16:45",
-          title: "",
-          content: "哈哈哈哈笑死我了",
-          img: "http://101.42.232.134/group1/M00/00/00/CgAYCWHKwi2AQog0AAQzBCR7_yY357.jpg",
-        },
-        {
-          author: {
-            username: "ilan",
-            icon: "https://img2.baidu.com/it/u=3683141353,2044374394&fm=26&fmt=auto",
-          },
-          createTime: "2022-01-06 16:45",
-          title: "",
-          content: "哈哈哈哈笑死我了",
-          img: "http://101.42.232.134/group1/M00/00/00/CgAYCWHKwi2AQog0AAQzBCR7_yY357.jpg",
+          imgs: [
+            "http://101.42.232.134/group1/M00/00/00/CgAYCWHKwi2AQog0AAQzBCR7_yY357.jpg",
+          ],
         },
       ],
     };
   },
   mounted: function () {
     this.getTianQi();
+    this.queryArticle();
   },
   methods: {
     toSetting() {
@@ -308,7 +309,11 @@ export default {
         name: "userInfoPage",
       });
     },
-    UploadImage(param) {
+    shuaxin() {
+      this.showTankuang = false;
+      location.reload;
+    },
+    /*   UploadImage(param) {
       const formData = new FormData();
       formData.append("file", param.file);
       postRequest("/file/uploadFast", formData)
@@ -329,20 +334,29 @@ export default {
       this.$refs.upload.clearFiles(); //清除文件对象
       this.logo = file.raw; // 取出上传文件的对象，在其它地方也可以使用
       this.urlArr = [{ name: file.name, url: file.url }]; // 重新手动赋值filstList， 免得自定义上传成功了, 而fileList并没有动态改变， 这样每次都是上传一个对象
+    }, */
+    //查询日志
+    queryArticle() {
+      postRequest("/blog/queryArticle", this.article).then((resp) => {
+        if (resp.obj) {
+          this.activityList = resp.obj;
+        }
+      });
     },
+
     //保存日志
     saveArticle() {
       //校验输入内容
-      postRequest("/blog/insertArticle", article).then((resp) => {
-        console.log("保存~");
-        alter("发表成功");
+      postRequest("/blog/insertArticle", this.article).then((resp) => {
+        if (resp) {
+          this.showTankuang = true;
+        }
       });
     },
     //获取当地城市及天气
     getTianQi() {
       //获取城市名
       var city = returnCitySN["cname"];
-
       var index = city.lastIndexOf("省");
       this.ip = returnCitySN["cip"];
       var obj =
@@ -384,7 +398,8 @@ export default {
 <style>
 .indexBack {
   width: 98.46%;
-  height: 90.46%;
+  height: calc(100vh);
+  overflow: hidden;
   top: 0;
   left: 0;
   font-size: 200%;
@@ -411,13 +426,17 @@ export default {
   margin-top: -10px;
   margin-left: -8px;
   margin-right: -8px;
-  height: 40px !important;
+  height: calc(7vh) !important;
   background: black;
   color: aliceblue;
 }
+.space_el_main {
+  height: calc(86.5vh) !important;
+  background-color: rgba(255, 255, 255, 0.5);
+}
 .space_el_footer {
   background: dimgrey;
-  height: 50px !important;
+  height: calc(10vh) !important;
   width: 100%+7px;
   margin-left: -6px;
   color: aliceblue;
@@ -426,9 +445,6 @@ export default {
   font-size: 80%;
   margin-top: -10px;
   float: right;
-}
-.el-main {
-  height: 100%;
 }
 .el-upload {
   display: inline;
@@ -494,6 +510,9 @@ export default {
   list-style: none;
   margin-top: -2px;
   margin-left: -8px;
+}
+.artimg {
+  float: left;
 }
 .body {
   /* float: left; */

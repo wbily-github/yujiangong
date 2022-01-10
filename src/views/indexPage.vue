@@ -277,8 +277,7 @@ export default {
   background: url("../assets/index.jpg") center center no-repeat;
   background-repeat: no-repeat;
   background-attachment: fixed;
-  background-size: 100% auto;
-
+  background-size: 100% calc(100vh);
   padding: 10px;
 }
 .header {

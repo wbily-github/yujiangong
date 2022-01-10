@@ -131,7 +131,7 @@ export default {
   height: 800%;
   padding: 10px 35px 10px 35px;
   background-image: url("https://img0.baidu.com/it/u=120612477,1050689788&fm=26&fmt=auto");
-  background-size: 100%;
+  background-size: 100% calc(100vh);
   background-repeat: no-repeat;
 }
 .avatar-uploader .el-upload {

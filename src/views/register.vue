@@ -140,7 +140,7 @@ export default {
   height: 100%;
   padding: 10px 35px 10px 35px;
   background-image: url("../assets/register.jpeg");
-  background-size: 100%;
+  background-size: 100% calc(100vh);
   background-repeat: no-repeat;
   margin: 0 auto;
 }

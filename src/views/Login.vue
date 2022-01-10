@@ -7,7 +7,6 @@
     element-loading-background="rpba(0,0,0,0.8)"
   >
     <el-container direction="vertical">
-      <el-header class="header_login"> </el-header>
       <el-main class="login_body">
         <div class="logform">
           <el-form
@@ -141,19 +140,20 @@ export default {
 .index {
   background-image: url("https://img0.baidu.com/it/u=120612477,1050689788&fm=26&fmt=auto");
   position: absolute;
-  width: 94.5%;
-  height: auto;
-  padding: 10px 35px 10px 35px;
-  background-size: 100%;
-  background-repeat: no-repeat;
-  margin: 0 auto;
+  width: 100%;
+  height: calc(100vh);
+
+  background-size: 100% calc(100vh);
+  background-attachment: "fixed";
+  background-repeat: "no-repeat";
 }
 .logform {
-  margin-top: -100px;
+  float: right;
+  width: calc(100vh);
 }
 .loginContain {
-  height: 120px;
-  width: 80px;
+  height: calc(100vh);
+  width: calc(100vh);
   background-color: rgba(0, 0, 0, 0.3);
   border: 1px black;
   float: right;
@@ -189,6 +189,7 @@ export default {
 } */
 .erweima {
   float: right;
+  width: calc(50vh);
   text-align: center;
   margin-top: 50px;
   margin-right: 128px;
@@ -206,8 +207,5 @@ export default {
 }
 .footer_login1 {
   margin-bottom: -30px;
-}
-.header_login {
-  text-align: center;
 }
 </style>
