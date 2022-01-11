@@ -56,6 +56,7 @@
         <div class="erweima">
           &nbsp;&nbsp;
           <img
+            style="width: calc(45vh); height: calc(45vh)"
             src="http://www.ilan.ltd/group1/M00/00/01/CgAYCWHU9COAE_WUAABG2Ev4CJ4911.jpg"
           />
           <h3 style="">扫码使用手机登录</h3>
@@ -70,8 +71,10 @@
             data-v-fe7aa2b2=""
             src="http://www.ilan.ltd/group1/M00/00/01/CgAYCWHXuLKAW9T5AAEuND_1Kh8510.jpg"
             style="height: 14px"
-          />
-          &nbsp;<a href="http://www.beian.gov.cn">冀ICP备2021028982号-1</a>
+          /><a
+            href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=13011002000325"
+            >冀公网安备 13011002000325号</a
+          >&nbsp;<a href="http://www.beian.gov.cn">冀ICP备2021028982号-1</a>
         </div>
       </el-footer>
     </el-container>
@@ -149,7 +152,7 @@ export default {
 }
 .logform {
   float: right;
-  width: calc(100vh);
+  width: calc(50vh);
 }
 .loginContain {
   height: calc(100vh);
@@ -188,11 +191,12 @@ export default {
   align-items: center;
 } */
 .erweima {
-  float: right;
-  width: calc(50vh);
+  float: left;
   text-align: center;
-  margin-top: 50px;
-  margin-right: 128px;
+  width: calc(50vh);
+  height: calc(50vh);
+  margin-top: calc(7vh);
+  margin-left: calc(50vh);
 }
 .el-form-item__content {
   display: flex;

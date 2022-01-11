@@ -1,6 +1,6 @@
 <template>
   <div class="register">
-    <div class="pop" v-if="showModal">注册成功！</div>
+    <div v-if="showModal">注册成功！</div>
     <el-dialog
       title="注册提示"
       :visible.sync="showModal"
@@ -12,7 +12,7 @@
     >
       <h1 @click="backTologin" class="tiaozhuan">注册成功！点我去登录</h1>
     </el-dialog>
-    <div class="left">
+    <div class="leftRegister">
       <el-form
         :rules="rules"
         ref="registerForm"
@@ -61,7 +61,7 @@
         >
       </el-form>
     </div>
-    <div class="right">
+    <div class="rightRegister">
       简介：
       <h2>{{ kjjj }}</h2>
     </div>
@@ -137,19 +137,19 @@ export default {
 .register {
   position: absolute;
   width: 100%;
-  height: 100%;
-  padding: 10px 35px 10px 35px;
+  height: calc(100vh);
   background-image: url("../assets/register.jpeg");
   background-size: 100% calc(100vh);
   background-repeat: no-repeat;
   margin: 0 auto;
 }
 .loginContain {
-  margin: 10%;
   border-radius: 15px;
   background-clip: padding-box;
-  height: 320px;
-  width: 350px;
+  width: calc(60vh);
+  height: calc(60vh);
+  margin-right: calc(5vh);
+  margin-top: calc(15vh);
   padding: 10px 18px 5px 18px;
   background-color: rgba(0, 0, 0, 0.3);
   border: 1px black;
@@ -170,18 +170,13 @@ export default {
   font-size: 100%;
   text-align: center;
 }
+.leftRegister,
+.rightRegister {
+  width: 50%;
+  float: right;
+}
 .registerSubmit {
   margin: 0px 10px 0px auto;
   width: 100%;
-}
-.left,
-.right {
-  height: 320px;
-  width: 350px;
-  padding: 30px 80px 30px 80px;
-  float: left;
-}
-.right {
-  margin-top: 20px;
 }
 </style>

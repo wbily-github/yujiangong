@@ -1,6 +1,10 @@
 <template>
   <div
     class="indexBack"
+    v-loading="loading"
+    element-loading-text="正在提交..."
+    element-loading-spinner="el-icon-loading"
+    element-loading-background="rpba(0,0,0,0.8)"
     :style="{
       backgroundImage: 'url(' + back + ')',
       backgroundSize: '100% calc(100vh)',
@@ -8,7 +12,7 @@
       backgroundRepeat: 'no-repeat',
     }"
   >
-    <el-dialog
+    <!--     <el-dialog
       title="发表日志"
       :visible.sync="showTankuang"
       :close-on-click-modal="true"
@@ -19,7 +23,7 @@
       class="tankuang"
     >
       <button @click="shuaxin">确定</button>
-    </el-dialog>
+    </el-dialog> -->
     <el-container direction="vertical">
       <el-header class="space_el_header">
         <div class="space_header">
@@ -117,21 +121,38 @@
               style="width: 80%"
             ></el-input>
             <div style="float: right; width: 10%">
-              <i class="el-icon-camera" style="width: 100%"> </i>
+              <el-upload
+                class="upload-demo"
+                ref="upload"
+                action="string"
+                :http-request="fileUpload"
+                :show-file-list="false"
+              >
+                <i class="el-icon-camera" type="primary" style="width: 100%">
+                </i>
+              </el-upload>
               <el-button @click="saveArticle" style="margin-top: 20px"
                 >发表</el-button
               >
             </div>
           </div>
           <div
+            :v-show="showImgLst"
+            v-for="(item, index) in article.imgs"
+            :key="(item, index)"
+            style="margin-left: 50px; float: left"
+          >
+            <img :src="item.url" style="width: 35px; height: 35px" />
+          </div>
+          <div
             style="
-              height: 353px;
+              height: calc(55vh);
               width: 100%;
               border: 1px;
               overflow-x: hidden;
               overflow-y: scroll;
               position: absolute;
-              float: none;
+              margin-top: 35px;
             "
           >
             <div
@@ -144,13 +165,14 @@
                   <img
                     :src="items.author.icon"
                     @click="toUserInfo"
-                    style="
-                      width: 30px;
-                      height: 30px;
-                      border-radius: 50%;
-                      margin-top: -5px;
-                    "
+                    style="width: 30px; height: 30px; border-radius: 50%"
                   />{{ items.author.username }}&nbsp;{{ items.createTime }}
+                  <a
+                    style="font-size: 70%; color: blue"
+                    @click="deleteActivity(items.id)"
+                    v-show="items.ismine"
+                    >删除</a
+                  >
                 </div>
                 <div class="arcitle-style">
                   <div>&nbsp;&nbsp;{{ items.content }}</div>
@@ -226,7 +248,10 @@
               data-v-fe7aa2b2=""
               src="http://www.ilan.ltd/group1/M00/00/01/CgAYCWHXuLKAW9T5AAEuND_1Kh8510.jpg"
               style="height: 14px"
-            /><a href="http://www.beian.gov.cn">冀ICP备2021028982号-1</a>
+            /><a
+              href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=13011002000325"
+              >冀公网安备 13011002000325号</a
+            >&nbsp;<a href="http://www.beian.gov.cn">冀ICP备2021028982号-1</a>
           </div>
         </div>
       </el-footer>
@@ -239,6 +264,8 @@ import { postRequest } from "../uitls/api";
 export default {
   data() {
     return {
+      loading: false,
+      showImgLst: false,
       showTankuang: false,
       name:
         null == window.sessionStorage.getItem("username")
@@ -259,21 +286,7 @@ export default {
         content: "",
         imgs: [],
       },
-      activityList: [
-        {
-          author: {
-            username: "ilan",
-            icon: "https://img2.baidu.com/it/u=3683141353,2044374394&fm=26&fmt=auto",
-          },
-          createTime: "2022-01-06 16:45",
-          title: "",
-          content:
-            "哈哈哈哈笑死我了,张三吃碗炸酱面，使我不得开心颜，李四偷吃打卤面，至今没有被发现",
-          imgs: [
-            "http://101.42.232.134/group1/M00/00/00/CgAYCWHKwi2AQog0AAQzBCR7_yY357.jpg",
-          ],
-        },
-      ],
+      activityList: [],
     };
   },
   mounted: function () {
@@ -309,47 +322,66 @@ export default {
         name: "userInfoPage",
       });
     },
-    shuaxin() {
-      this.showTankuang = false;
-      location.reload;
-    },
-    /*   UploadImage(param) {
+
+    fileUpload(param) {
       const formData = new FormData();
       formData.append("file", param.file);
       postRequest("/file/uploadFast", formData)
         .then((resp) => {
-          console.log("上传图片成功");
-          const imgs = new Array();
-          imgs.push(resp.obj.filePath);
-          this.arcitle.imgs = imgs;
-          param.onSuccess(); // 上传成功的图片会显示绿色的对勾
-          // 但是我们上传成功了图片， fileList 里面的值却没有改变，还好有on-change指令可以使用
+          console.log("上传图片成功", resp);
+          this.showImgLst = true;
+          this.article.imgs.push({ name: param.name, url: resp.obj.filePath });
         })
         .catch((resp) => {
           console.log("图片上传失败");
           param.onError();
         });
     },
-    fileChange(file) {
-      this.$refs.upload.clearFiles(); //清除文件对象
-      this.logo = file.raw; // 取出上传文件的对象，在其它地方也可以使用
-      this.urlArr = [{ name: file.name, url: file.url }]; // 重新手动赋值filstList， 免得自定义上传成功了, 而fileList并没有动态改变， 这样每次都是上传一个对象
-    }, */
     //查询日志
     queryArticle() {
       postRequest("/blog/queryArticle", this.article).then((resp) => {
         if (resp.obj) {
-          this.activityList = resp.obj;
+          var objlst = resp.obj;
+          var actlst = [];
+          for (let item of objlst) {
+            item.ismine = false;
+            if (
+              item.author.username == window.sessionStorage.getItem("username")
+            ) {
+              item.ismine = true;
+            }
+            actlst.push(item);
+          }
+          this.activityList = actlst;
+          console.log("###qqqqqq#####3", actlst);
+          this.$message.closeAll();
         }
       });
     },
 
     //保存日志
     saveArticle() {
+      this.loading = true;
       //校验输入内容
+      var con = this.article.content;
+      if (!con) {
+        this.loading = false;
+        this.$message.error("请编写文案");
+        return;
+      }
       postRequest("/blog/insertArticle", this.article).then((resp) => {
         if (resp) {
-          this.showTankuang = true;
+          this.loading = false;
+        }
+      });
+    },
+    //删除日志
+    deleteActivity(id) {
+      this.loading = true;
+      console.log("************", id, "$$$");
+      postRequest("/blog/deleteArticle", id).then((resp) => {
+        if (resp) {
+          this.loading = false;
         }
       });
     },
