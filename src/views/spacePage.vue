@@ -12,18 +12,6 @@
       backgroundRepeat: 'no-repeat',
     }"
   >
-    <!--     <el-dialog
-      title="发表日志"
-      :visible.sync="showTankuang"
-      :close-on-click-modal="true"
-      :modal="true"
-      :show-close="true"
-      style="item-align: center"
-      :center="true"
-      class="tankuang"
-    >
-      <button @click="shuaxin">确定</button>
-    </el-dialog> -->
     <el-container direction="vertical">
       <el-header class="space_el_header">
         <div class="space_header">
@@ -119,8 +107,9 @@
               :rows="3"
               placeholder="说点什么吧..."
               style="width: 80%"
-            ></el-input>
-            <div style="float: right; width: 10%">
+            >
+            </el-input>
+            <div style="width: 10%">
               <el-upload
                 class="upload-demo"
                 ref="upload"
@@ -128,37 +117,45 @@
                 :http-request="fileUpload"
                 :show-file-list="false"
               >
-                <i class="el-icon-camera" type="primary" style="width: 100%">
+                <i
+                  class="el-icon-camera"
+                  type="primary"
+                  style="width: 100%; margin-left: 5%"
+                >
                 </i>
               </el-upload>
-              <el-button @click="saveArticle" style="margin-top: 20px"
+              <el-button
+                @click="saveArticle"
+                style="margin-top: calc(3vh); margin-left: 10%"
                 >发表</el-button
               >
             </div>
           </div>
-          <div
-            :v-show="showImgLst"
-            v-for="(item, index) in article.imgs"
-            :key="(item, index)"
-            style="margin-left: 50px; float: left"
-          >
-            <img :src="item.url" style="width: 35px; height: 35px" />
+          <!-- 图片展示 -->
+          <div style="display: flex; text-align: left">
+            <div
+              :v-show="showImgLst"
+              v-for="(item, index) in article.imgs"
+              :key="(item, index)"
+              @mouseover="mouseOver(item.url)"
+              @mouseleave="mouseLeave(item.url)"
+            >
+              <img :src="item.url" style="width: 35px; height: calc(6vh)" />
+              <div class="el-delete-icon">
+                <i
+                  class="el-icon-delete"
+                  style="color: red; width: 35px; height: calc(6vh)"
+                  v-show="item.isDeleteShow"
+                  @click="removeLst(item.url)"
+                ></i>
+              </div>
+            </div>
           </div>
-          <div
-            style="
-              height: calc(55vh);
-              width: 100%;
-              border: 1px;
-              overflow-x: hidden;
-              overflow-y: scroll;
-              position: absolute;
-              margin-top: 35px;
-            "
-          >
+          <div :class="dtContent">
             <div
               v-for="(items, index) in activityList"
               :key="(items, index)"
-              style="margin-top: 20px"
+              style="margin-top: 10px"
             >
               <div style="clear: both">
                 <div class="author-style">
@@ -182,7 +179,7 @@
                     :key="(im, index)"
                   >
                     <img
-                      style="width: 150px; height: 150px; margin-left: 50px"
+                      style="width: 90px; height: 90px; margin-left: 20px"
                       :src="im.url"
                     />
                   </div>
@@ -261,12 +258,12 @@
 <script>
 import axios from "axios";
 import { postRequest } from "../uitls/api";
+import { L2Dwidget } from "live2d-widget";
 export default {
   data() {
     return {
       loading: false,
       showImgLst: false,
-      showTankuang: false,
       name:
         null == window.sessionStorage.getItem("username")
           ? "佚名"
@@ -292,6 +289,50 @@ export default {
   mounted: function () {
     this.getTianQi();
     this.queryArticle();
+    this.article.imgs.isDeleteShow = false;
+  },
+  created() {
+    L2Dwidget.init({
+      model: {
+        jsonPath:
+          "https://unpkg.com/live2d-widget-model-miku@1.0.5/assets/miku.model.json",
+        /*  "https://unpkg.com/live2d-widget-model-shizuku@1.0.5/assets/shizuku.model.json", */
+        scale: 1,
+      },
+      display: {
+        position: "left",
+        width: 150,
+        height: 350,
+        hOffset: 0,
+        vOffset: -20,
+      },
+      mobile: {
+        show: true,
+        scale: 0.5,
+      },
+      react: {
+        opacityDefault: 0.8,
+        opacityOnHover: 1,
+      },
+      /*  dialog: {
+        enable: true,
+        script: {
+          "tap body": "哎呀！别碰我！",
+          "tap face": "弄疼人家了~",
+        },
+      }, */
+    });
+  },
+
+  computed: {
+    //动态文章大小
+    dtContent() {
+      if (this.showImgLst) {
+        return "spaceContent1";
+      } else {
+        return "spaceContent";
+      }
+    },
   },
   methods: {
     toSetting() {
@@ -305,6 +346,7 @@ export default {
         name: "IndexPage",
       });
     },
+    //退出
     exit() {
       postRequest("/blog/logout").then((resp) => {
         console.log(":@@@@@@@@@@:" + resp);
@@ -316,13 +358,49 @@ export default {
         }
       });
     },
+    //删除按钮鼠标悬停事件
+    mouseOver(param) {
+      console.log("01已进入图片");
+      var imgs = this.article.imgs;
+      let suoyin = imgs.findIndex((item) => {
+        if (item.url == param) {
+          return true;
+        }
+      });
+      console.log("最后的索引找到了", suoyin);
 
+      var img = {};
+      img.url = param;
+      img.isDeleteShow = true;
+      imgs.splice(suoyin, 1, img);
+      console.log("最后的数据", this.article.imgs);
+    },
+    mouseLeave(param) {
+      console.log("01已离开图片");
+      var imgs = this.article.imgs;
+      let suoyin = imgs.findIndex((item) => {
+        if (item.url == param) {
+          return true;
+        }
+      });
+      this.article.imgs[suoyin].isDeleteShow = false;
+    },
     toUserInfo() {
       this.$router.push({
         name: "userInfoPage",
       });
     },
-
+    //移除已上传图片
+    removeLst(param) {
+      var imgs = this.article.imgs;
+      let suoyin = imgs.findIndex((item) => {
+        if (item.url == param) {
+          return true;
+        }
+      });
+      imgs.splice(suoyin, 1);
+    },
+    // 文件上传
     fileUpload(param) {
       const formData = new FormData();
       formData.append("file", param.file);
@@ -358,7 +436,6 @@ export default {
         }
       });
     },
-
     //保存日志
     saveArticle() {
       this.loading = true;
@@ -429,7 +506,7 @@ export default {
 
 <style>
 .indexBack {
-  width: 98.46%;
+  width: 100%;
   height: calc(100vh);
   overflow: hidden;
   top: 0;
@@ -437,7 +514,6 @@ export default {
   font-size: 200%;
   text-align: center;
   position: absolute;
-  padding: 10px;
 }
 .el-container {
   width: 100%;
@@ -449,13 +525,10 @@ export default {
 .el-space-body {
   width: 100%;
 }
-
 .space_header {
   margin-top: -35px;
 }
-
 .space_el_header {
-  margin-top: -10px;
   margin-left: -8px;
   margin-right: -8px;
   height: calc(7vh) !important;
@@ -465,6 +538,27 @@ export default {
 .space_el_main {
   height: calc(86.5vh) !important;
   background-color: rgba(255, 255, 255, 0.5);
+}
+.spaceContent {
+  height: calc(62vh);
+  width: 100%;
+  border: 1px;
+  font-size: 80%;
+  margin-top: calc(0.5vh);
+  font-size: 80%;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  position: absolute;
+}
+.spaceContent1 {
+  height: calc(56vh);
+  width: 100%;
+  border: 1px;
+  margin-top: calc(1.5vh);
+  font-size: 80%;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  position: absolute;
 }
 .space_el_footer {
   background: dimgrey;
@@ -488,7 +582,8 @@ export default {
 .space-activity-insert {
   width: 100%;
   height: 100px;
-  align-items: center;
+  display: flex;
+  text-align: left;
 }
 .el-menu-space-left {
   width: 80%;
@@ -513,7 +608,13 @@ export default {
   align-items: center;
   font-size: 25%;
 }
+.el-delete-icon {
+  margin-left: 25%;
+  margin-top: -32.5px;
+  height: calc(3vh);
 
+  font-size: 16px;
+}
 .tabs-item {
   font-size: 50%;
   float: left;
