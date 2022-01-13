@@ -89,13 +89,29 @@
           </div>
         </div>
       </el-header>
-      <el-container style="flex-direction: row">
-        <el-aside width="15%" style="height: 90%">
+      <el-container style="flex-direction: row; height: calc(87vh)">
+        <el-aside width="15%" style="height: calc(80vh)">
           <el-menu class="el-menu-space-left">
-            <el-menu-item><i class="el-icon-share"></i>好友动态</el-menu-item>
-            <el-menu-item><i class="el-icon-s-home"></i>我的空间</el-menu-item>
-            <el-menu-item><i class="el-icon-picture"></i>我的相册</el-menu-item>
-            <el-menu-item><i class="el-icon-menu"></i>我的应用</el-menu-item>
+            <el-menu-item
+              ><router-link to="/spacePage" class="daohang-link" exact=""
+                ><i class="el-icon-share"></i>好友动态</router-link
+              ></el-menu-item
+            >
+            <el-menu-item
+              ><router-link to="/mySpace" class="daohang-link" exact=""
+                ><i class="el-icon-s-home"></i>我的空间</router-link
+              ></el-menu-item
+            >
+            <el-menu-item
+              ><router-link to="/myPhoto" class="daohang-link" exact=""
+                ><i class="el-icon-picture"></i>我的相册</router-link
+              ></el-menu-item
+            >
+            <el-menu-item
+              ><router-link to="/myApp" class="daohang-link" exact=""
+                ><i class="el-icon-menu"></i>我的应用</router-link
+              ></el-menu-item
+            >
           </el-menu>
         </el-aside>
         <el-main class="space_el_main">
@@ -189,7 +205,7 @@
           </div>
         </el-main>
       </el-container>
-      <el-footer style="padding: 0 0px; height: 50px">
+      <el-footer style="padding: 0px; height: calc(6.5vh)">
         <div class="space_el_footer">
           <div>
             <a
@@ -248,7 +264,9 @@
             /><a
               href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=13011002000325"
               >冀公网安备 13011002000325号</a
-            >&nbsp;<a href="http://www.beian.gov.cn">冀ICP备2021028982号-1</a>
+            >&nbsp;<a href="https://beian.miit.gov.cn/"
+              >冀ICP备2021028982号-1</a
+            >
           </div>
         </div>
       </el-footer>
@@ -531,12 +549,13 @@ export default {
 .space_el_header {
   margin-left: -8px;
   margin-right: -8px;
-  height: calc(7vh) !important;
+  height: calc(6.5vh) !important;
   background: black;
   color: aliceblue;
 }
 .space_el_main {
-  height: calc(86.5vh) !important;
+  height: calc(80vh) !important;
+  padding: 10px !important;
   background-color: rgba(255, 255, 255, 0.5);
 }
 .spaceContent {
@@ -643,6 +662,9 @@ export default {
   list-style: none;
   margin-top: -2px;
   margin-left: -8px;
+}
+.daohang-link {
+  text-decoration: none;
 }
 .artimg {
   float: left;

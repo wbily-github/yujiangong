@@ -12,59 +12,78 @@
     >
       <h1 @click="backTologin" class="tiaozhuan">注册成功！点我去登录</h1>
     </el-dialog>
-    <div class="leftRegister">
-      <el-form
-        :rules="rules"
-        ref="registerForm"
-        :model="registerForm"
-        class="loginContain"
-      >
-        <h3 class="registerTitle">欢迎新朋友加入</h3>
-        <el-form-item prop="username">
-          <el-input
-            type="text"
-            auto-complete="false"
-            v-model="registerForm.username"
-            placeholder="用戶名"
-            >用户名：</el-input
+    <el-container direction="vertical">
+      <el-main class="login_body">
+        <div class="leftRegister">
+          <el-form
+            :rules="rules"
+            ref="registerForm"
+            :model="registerForm"
+            class="loginContain"
           >
-        </el-form-item>
-        <el-form-item prop="password">
-          <el-input
-            type="password"
-            auto-complete="false"
-            v-model="registerForm.password"
-            placeholder="密码"
-            >密码：</el-input
-          >
-        </el-form-item>
-        <el-form-item prop="code">
-          <el-input
-            type="text"
-            auto-complete="false"
-            v-model="registerForm.code"
-            placeholder="验证码"
-            style="width: 250px; margin: 0px 0px 0px 0px"
-          ></el-input>
-          <img :src="captchaUrl" @click="updateCaptcha" />
-        </el-form-item>
-        <el-input
-          type="text"
-          v-model="registerForm.accountToken"
-          auto-complete="false"
-          placeholder="权限令牌"
-          class="qx"
-          >权限令牌</el-input
-        >
-        <el-button type="primary" class="registerSubmit" @click="submit"
-          >注册</el-button
-        >
-      </el-form>
-    </div>
-    <div class="rightRegister">
-      简介：
-      <h2>{{ kjjj }}</h2>
-    </div>
+            <h3 class="registerTitle">欢迎新朋友加入</h3>
+            <el-form-item prop="username">
+              <el-input
+                type="text"
+                auto-complete="false"
+                v-model="registerForm.username"
+                placeholder="用戶名"
+                >用户名：</el-input
+              >
+            </el-form-item>
+            <el-form-item prop="password">
+              <el-input
+                type="password"
+                auto-complete="false"
+                v-model="registerForm.password"
+                placeholder="密码"
+                >密码：</el-input
+              >
+            </el-form-item>
+            <el-form-item prop="code">
+              <el-input
+                type="text"
+                auto-complete="false"
+                v-model="registerForm.code"
+                placeholder="验证码"
+                style="width: 250px; margin: 0px 0px 0px 0px"
+              ></el-input>
+              <img :src="captchaUrl" @click="updateCaptcha" />
+            </el-form-item>
+            <el-input
+              type="text"
+              v-model="registerForm.accountToken"
+              auto-complete="false"
+              placeholder="权限令牌"
+              class="qx"
+              >权限令牌</el-input
+            >
+            <el-button type="primary" class="registerSubmit" @click="submit"
+              >注册</el-button
+            >
+          </el-form>
+        </div>
+        <div class="rightRegister">
+          简介：
+          <h2>{{ kjjj }}</h2>
+        </div>
+      </el-main>
+      <el-footer>
+        <div class="footer_login1">
+          <a href="http://www.ilan.ltd">ilan空间，梦开始的地方</a>
+        </div>
+        <div class="footer_login">
+          <img
+            data-v-fe7aa2b2=""
+            src="http://www.ilan.ltd/group1/M00/00/01/CgAYCWHXuLKAW9T5AAEuND_1Kh8510.jpg"
+            style="height: 14px"
+          /><a
+            href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=13011002000325"
+            >冀公网安备 13011002000325号</a
+          >&nbsp;<a href="https://beian.miit.gov.cn/">冀ICP备2021028982号-1</a>
+        </div>
+      </el-footer>
+    </el-container>
   </div>
 </template>
 <script>

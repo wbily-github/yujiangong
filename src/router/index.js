@@ -5,6 +5,7 @@ import IndexPage from '../views/indexPage.vue'
 import Register from '../views/register.vue'
 import SpacePage from '../views/spacePage.vue'
 import UserInfoPage from '../views/userInfoPage.vue'
+import myPhoto from '../views/myPhoto.vue'
 
 Vue.use(VueRouter)
 
@@ -32,7 +33,12 @@ const routes = [
     path: '/userInfoPage',
     name: 'userInfoPage',
     component: UserInfoPage
+  },{
+    path: '/myPhoto',
+    name: 'myPhoto',
+    component: myPhoto
   },
+ 
   
 ]
 

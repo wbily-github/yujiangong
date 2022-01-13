@@ -214,7 +214,7 @@
       /><a
         href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=13011002000325"
         >冀公网安备 13011002000325号</a
-      >&nbsp;<a href="http://www.beian.gov.cn">冀ICP备2021028982号-1</a>
+      >&nbsp;<a href="https://beian.miit.gov.cn/">冀ICP备2021028982号-1</a>
     </div>
   </div>
 </template>

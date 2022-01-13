@@ -56,7 +56,7 @@
         <div class="erweima">
           &nbsp;&nbsp;
           <img
-            style="width: calc(45vh); height: calc(45vh)"
+            style="width: 45%; height: calc(45vh)"
             src="http://www.ilan.ltd/group1/M00/00/01/CgAYCWHU9COAE_WUAABG2Ev4CJ4911.jpg"
           />
           <h3 style="">扫码使用手机登录</h3>
@@ -74,7 +74,7 @@
           /><a
             href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=13011002000325"
             >冀公网安备 13011002000325号</a
-          >&nbsp;<a href="http://www.beian.gov.cn">冀ICP备2021028982号-1</a>
+          >&nbsp;<a href="https://beian.miit.gov.cn/">冀ICP备2021028982号-1</a>
         </div>
       </el-footer>
     </el-container>
@@ -152,11 +152,11 @@ export default {
 }
 .logform {
   float: right;
-  width: calc(50vh);
+  width: 45%;
 }
 .loginContain {
   height: calc(100vh);
-  width: calc(100vh);
+  width: 100%;
   background-color: rgba(0, 0, 0, 0.3);
   border: 1px black;
   float: right;
@@ -193,10 +193,10 @@ export default {
 .erweima {
   float: left;
   text-align: center;
-  width: calc(50vh);
-  height: calc(50vh);
-  margin-top: calc(7vh);
-  margin-left: calc(50vh);
+  width: 45%;
+  height: calc(30vh);
+  margin-top: calc(20vh);
+  margin-left: calc(10vh);
 }
 .el-form-item__content {
   display: flex;
