@@ -1,10 +1,6 @@
 <template>
   <div
     class="indexBack"
-    v-loading="loading"
-    element-loading-text="正在提交..."
-    element-loading-spinner="el-icon-loading"
-    element-loading-background="rpba(0,0,0,0.8)"
     :style="{
       backgroundImage: 'url(' + back + ')',
       backgroundSize: '100% calc(100vh)',
@@ -12,6 +8,25 @@
       backgroundRepeat: 'no-repeat',
     }"
   >
+    <el-dialog
+      :visible.sync="showBigImg"
+      :close-on-click-modal="true"
+      :modal="true"
+      :show-close="true"
+      :center="true"
+      class="bigImgDig"
+    >
+      <img :src="bigImg" style="height: 100%; width: 100%" />
+    </el-dialog>
+    <el-dialog title="空间设置" :visible.sync="dialogSetting" width="30%">
+      <div label-width="20%">der啊，偷个懒，这都能被发现</div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogSetting = false">取 消</el-button>
+        <el-button type="primary" @click="dialogSetting = false"
+          >确 定</el-button
+        >
+      </span>
+    </el-dialog>
     <el-container direction="vertical">
       <el-header class="space_el_header">
         <div class="space_header">
@@ -115,98 +130,42 @@
           </el-menu>
         </el-aside>
         <el-main class="space_el_main">
-          <div class="space-activity-insert">
-            <el-input
-              v-model="article.content"
-              type="textarea"
-              resize="none"
-              :rows="3"
-              placeholder="说点什么吧..."
-              style="width: 80%"
-            >
-            </el-input>
-            <div style="width: 10%">
-              <el-upload
-                class="upload-demo"
-                ref="upload"
-                action="string"
-                :http-request="fileUpload"
-                :show-file-list="false"
-              >
-                <i
-                  class="el-icon-camera"
-                  type="primary"
-                  style="width: 100%; margin-left: 5%"
-                >
-                </i>
-              </el-upload>
-              <el-button
-                @click="saveArticle"
-                style="margin-top: calc(3vh); margin-left: 10%"
-                >发表</el-button
-              >
-            </div>
-          </div>
-          <!-- 图片展示 -->
-          <div style="display: flex; text-align: left">
+          <div style="display: flex">
             <div
-              :v-show="showImgLst"
-              v-for="(item, index) in article.imgs"
-              :key="(item, index)"
-              @mouseover="mouseOver(item.url)"
-              @mouseleave="mouseLeave(item.url)"
-            >
-              <img :src="item.url" style="width: 35px; height: calc(6vh)" />
-              <div class="el-delete-icon">
-                <i
-                  class="el-icon-delete"
-                  style="color: red; width: 35px; height: calc(6vh)"
-                  v-show="item.isDeleteShow"
-                  @click="removeLst(item.url)"
-                ></i>
-              </div>
-            </div>
-          </div>
-          <!-- 动态内容 -->
-          <div :class="dtContent">
-            <div
-              v-for="(items, index) in activityList"
+              v-show="showFolder"
+              v-for="(items, index) in myFolderList"
               :key="(items, index)"
               style="margin-top: 10px"
             >
-              <div style="clear: both; text-align: left">
-                <!-- 头信息内容 -->
-                <div class="author-style">
-                  <img
-                    :src="items.author.icon"
-                    @click="toUserInfo"
-                    style="width: 30px; height: 30px; border-radius: 50%"
-                  />{{ items.author.username }}&nbsp;{{ items.createTime }}
-                  <a
-                    style="font-size: 70%; color: blue"
-                    @click="deleteActivity(items.id)"
-                    v-show="items.ismine"
-                    >删除</a
-                  >
+              <div @click="openImgFolder(items.folderid)">
+                <i
+                  class="el-icon-folder-opened"
+                  style="text-align: center；margin-right: 2%"
+                ></i>
+                <div
+                  style="text-align: center; margin-right: 2%; font-size: 50%"
+                >
+                  {{ items.folder }}
                 </div>
-                <!-- 文章内容 -->
-                <div class="arcitle-style">
-                  <div>&nbsp;&nbsp;{{ items.content }}</div>
-                  <div>
-                    <div
-                      class="artimg"
-                      v-for="(im, index) in items.imgs"
-                      :key="(im, index)"
-                    >
-                      <img
-                        style="width: 90px; height: 90px; margin-left: 10px"
-                        :src="im.url"
-                      />
-                    </div>
-                  </div>
-                  <div style="height: calc(2vh)">
-                    <i class="el-icon-ok">张三</i>
-                  </div>
+              </div>
+            </div>
+          </div>
+          <div v-show="!showFolder">
+            <div style="display: flex">
+              <i class="el-icon-back" @click="toFolder"></i>
+            </div>
+            <div style="display: flex">
+              <div
+                v-for="(item, index) in myPhotoList"
+                :key="(item, index)"
+                style="margin-top: 10px"
+              >
+                <div style="margin-right: 12px; width: 100px">
+                  <img
+                    :src="item.imgurl"
+                    @click="toBigImg(item.imgurl)"
+                    style="height: calc(15vh); width: 100%"
+                  />
                 </div>
               </div>
             </div>
@@ -288,8 +247,12 @@ import { L2Dwidget } from "live2d-widget";
 export default {
   data() {
     return {
-      loading: false,
-      showImgLst: false,
+      dialogSetting: false,
+      bigImg: "",
+      showBigImg: false,
+      showFolder: false,
+      myPhotoList: [],
+      myFolderList: [],
       name:
         null == window.sessionStorage.getItem("username")
           ? "佚名"
@@ -302,20 +265,11 @@ export default {
       ip: "",
       date: "",
       tianqi: "",
-      isShowImg: false,
-      urlArr: [],
-      article: {
-        username: "",
-        content: "",
-        imgs: [],
-      },
-      activityList: [],
     };
   },
   mounted: function () {
     this.getTianQi();
-    this.queryArticle();
-    this.article.imgs.isDeleteShow = false;
+    this.getMyPhoto();
   },
   created() {
     L2Dwidget.init({
@@ -362,7 +316,7 @@ export default {
   },
   methods: {
     toSetting() {
-      alert("该功能暂未开发！");
+      this.dialogSetting = true;
     },
     toMessage() {
       alert("该功能暂未开发！");
@@ -383,6 +337,34 @@ export default {
           });
         }
       });
+    },
+    getMyPhoto() {
+      postRequest("/blog/queryMyPhoto").then((resp) => {
+        console.log("图片查询成功", resp);
+        this.myFolderList = resp.obj;
+        this.showFolder = true;
+      });
+    },
+    toBigImg(param) {
+      var imgurl = param;
+      this.bigImg = imgurl;
+      this.showBigImg = true;
+    },
+    toFolder() {
+      this.showFolder = true;
+    },
+    //隐藏文件夹展示图片
+    openImgFolder(param) {
+      var folderid = param;
+      var foldImgs = [];
+      var folders = this.myFolderList;
+      folders.forEach(function (item, index) {
+        if (item.folderid == folderid) {
+          foldImgs = item.imgs;
+        }
+      });
+      this.myPhotoList = foldImgs;
+      this.showFolder = false;
     },
     //删除按钮鼠标悬停事件
     mouseOver(param) {
@@ -441,53 +423,7 @@ export default {
           param.onError();
         });
     },
-    //查询日志
-    queryArticle() {
-      postRequest("/blog/queryArticle", this.article).then((resp) => {
-        if (resp.obj) {
-          var objlst = resp.obj;
-          var actlst = [];
-          for (let item of objlst) {
-            item.ismine = false;
-            if (
-              item.author.username == window.sessionStorage.getItem("username")
-            ) {
-              item.ismine = true;
-            }
-            actlst.push(item);
-          }
-          this.activityList = actlst;
-          console.log("###qqqqqq#####3", actlst);
-          this.$message.closeAll();
-        }
-      });
-    },
-    //保存日志
-    saveArticle() {
-      this.loading = true;
-      //校验输入内容
-      var con = this.article.content;
-      if (!con) {
-        this.loading = false;
-        this.$message.error("请编写文案");
-        return;
-      }
-      postRequest("/blog/insertArticle", this.article).then((resp) => {
-        if (resp) {
-          this.loading = false;
-        }
-      });
-    },
-    //删除日志
-    deleteActivity(id) {
-      this.loading = true;
-      console.log("************", id, "$$$");
-      postRequest("/blog/deleteArticle", id).then((resp) => {
-        if (resp) {
-          this.loading = false;
-        }
-      });
-    },
+
     //获取当地城市及天气
     getTianQi() {
       //获取城市名
@@ -548,22 +484,19 @@ export default {
   flex-direction: column;
   justify-content: space-between;
 }
-.el-space-body {
-  width: 100%;
-}
+
 .space_header {
   margin-top: -35px;
 }
 .space_el_header {
   margin-left: -8px;
   margin-right: -8px;
-  height: calc(6.5vh) !important;
+  height: calc(7vh) !important;
   background: black;
   color: aliceblue;
 }
 .space_el_main {
-  height: calc(80vh) !important;
-  padding: 10px !important;
+  height: calc(86.5vh) !important;
   background-color: rgba(255, 255, 255, 0.5);
 }
 .spaceContent {
@@ -599,35 +532,15 @@ export default {
   margin-top: -10px;
   float: right;
 }
-.el-upload {
-  display: inline;
-  text-align: center;
-  cursor: pointer;
-  outline: 0;
-}
 
-.space-activity-insert {
-  width: 100%;
-  height: 100px;
-  display: flex;
-  text-align: left;
-}
 .el-menu-space-left {
   width: 80%;
   height: 50%;
   opacity: 0.5;
   margin-top: 30px;
 }
-.arcitle-style {
-  text-align: left;
-  font-size: 65%;
-}
-.author-style {
-  text-align: left;
-  font-size: 50%;
-}
-.guanggao1 {
-  height: 30%;
+.daohang-link {
+  text-decoration: none;
 }
 .el-footer {
   height: 4vh;
@@ -635,18 +548,13 @@ export default {
   align-items: center;
   font-size: 25%;
 }
-.el-delete-icon {
-  margin-left: 25%;
-  margin-top: -32.5px;
-  height: calc(3vh);
 
-  font-size: 16px;
-}
 .tabs-item {
   font-size: 50%;
   float: left;
   margin: 10px;
 }
+
 .el-icon-search {
   font-size: 56%;
 }
@@ -666,18 +574,18 @@ export default {
   margin-top: 7px;
   margin-right: 20px;
 }
+
 .li1 {
   list-style: none;
   margin-top: -2px;
   margin-left: -8px;
 }
-.daohang-link {
-  text-decoration: none;
-}
 .artimg {
-  text-align: left;
+  float: left;
 }
+
 .body {
+  /* float: left; */
   color: crimson;
   margin-top: 50px;
 }
