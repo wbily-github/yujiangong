@@ -304,16 +304,6 @@ export default {
     });
   },
 
-  computed: {
-    //动态文章大小
-    dtContent() {
-      if (this.showImgLst) {
-        return "spaceContent1";
-      } else {
-        return "spaceContent";
-      }
-    },
-  },
   methods: {
     toSetting() {
       this.dialogSetting = true;
@@ -343,6 +333,7 @@ export default {
         console.log("图片查询成功", resp);
         this.myFolderList = resp.obj;
         this.showFolder = true;
+        this.$message.closeAll();
       });
     },
     toBigImg(param) {
@@ -357,6 +348,7 @@ export default {
     openImgFolder(param) {
       var folderid = param;
       var foldImgs = [];
+      console.log(param);
       var folders = this.myFolderList;
       folders.forEach(function (item, index) {
         if (item.folderid == folderid) {

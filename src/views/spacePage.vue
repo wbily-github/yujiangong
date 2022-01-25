@@ -174,7 +174,7 @@
               :key="(items, index)"
               style="margin-top: 10px"
             >
-              <div style="clear: both; text-align: left">
+              <div style="text-align: left">
                 <!-- 头信息内容 -->
                 <div class="author-style">
                   <img
@@ -192,7 +192,7 @@
                 <!-- 文章内容 -->
                 <div class="arcitle-style">
                   <div>&nbsp;&nbsp;{{ items.content }}</div>
-                  <div>
+                  <div style="height: 90px" v-show="items.imgs.length > 0">
                     <div
                       class="artimg"
                       v-for="(im, index) in items.imgs"
@@ -204,9 +204,34 @@
                       />
                     </div>
                   </div>
-                  <div style="height: calc(2vh)">
-                    <i class="el-icon-ok">张三</i>
-                  </div>
+                </div>
+                <div style="height: 20px; width: 80%; text-align: right">
+                  <i
+                    :class="dianzana(items.id)"
+                    @mouseover="dianzanact(items.id)"
+                    @mouseleave="undianzanact(items.id, items.ysdz)"
+                    @click="toZan(items)"
+                  >
+                  </i>
+                  <i class="iconfont icon-message-fill"> </i>
+                </div>
+                <div
+                  style="
+                    height: 20px;
+                    width: 80%;
+                    text-align: left;
+                    font-size: 40%;
+                    margin-left: 3%;
+                  "
+                  v-if="items.dianzan.length > 0"
+                >
+                  <i class="iconfont icon-dianzan"> </i>{{ items.dianzan }}
+                </div>
+                <div
+                  style="height: calc(10vh); text-align: left"
+                  v-show="isPinglunShow"
+                >
+                  <el-input rows="1" placeholder="留下你的想法..."></el-input>
                 </div>
               </div>
             </div>
@@ -286,10 +311,13 @@ import axios from "axios";
 import { postRequest } from "../uitls/api";
 import { L2Dwidget } from "live2d-widget";
 export default {
+  inject: ["reload"],
+
   data() {
     return {
       loading: false,
       showImgLst: false,
+      isPinglunShow: false,
       name:
         null == window.sessionStorage.getItem("username")
           ? "佚名"
@@ -318,6 +346,7 @@ export default {
     this.article.imgs.isDeleteShow = false;
   },
   created() {
+    //瞎搞
     L2Dwidget.init({
       model: {
         jsonPath:
@@ -359,6 +388,20 @@ export default {
         return "spaceContent";
       }
     },
+    //点赞
+    dianzana: function () {
+      return function (param) {
+        var acts = this.activityList;
+        let suoyin = acts.findIndex((item) => {
+          if (item.id == param) {
+            return true;
+          }
+        });
+        return undefined == this.activityList[suoyin].dianzanStyle
+          ? "iconfont icon-dianzan"
+          : this.activityList[suoyin].dianzanStyle;
+      };
+    },
   },
   methods: {
     toSetting() {
@@ -370,6 +413,11 @@ export default {
     toIndex() {
       this.$router.push({
         name: "IndexPage",
+      });
+    },
+    toUserInfo() {
+      this.$router.push({
+        name: "userInfoPage",
       });
     },
     //退出
@@ -386,23 +434,18 @@ export default {
     },
     //删除按钮鼠标悬停事件
     mouseOver(param) {
-      console.log("01已进入图片");
       var imgs = this.article.imgs;
       let suoyin = imgs.findIndex((item) => {
         if (item.url == param) {
           return true;
         }
       });
-      console.log("最后的索引找到了", suoyin);
-
       var img = {};
       img.url = param;
       img.isDeleteShow = true;
       imgs.splice(suoyin, 1, img);
-      console.log("最后的数据", this.article.imgs);
     },
     mouseLeave(param) {
-      console.log("01已离开图片");
       var imgs = this.article.imgs;
       let suoyin = imgs.findIndex((item) => {
         if (item.url == param) {
@@ -411,11 +454,75 @@ export default {
       });
       this.article.imgs[suoyin].isDeleteShow = false;
     },
-    toUserInfo() {
-      this.$router.push({
-        name: "userInfoPage",
+    //点赞按钮悬停事件
+    dianzanact(param) {
+      var acts = this.activityList;
+      let suoyin = acts.findIndex((act) => {
+        if (act.id == param) {
+          console.log("俺改了", act);
+          return true;
+        }
+      });
+      var newact = this.activityList[suoyin];
+      newact.dianzanStyle = "iconfont icon-dianzan_kuai";
+
+      acts.splice(suoyin, 1, newact);
+    },
+    //点赞悬停离开事件
+    undianzanact(param, param1) {
+      console.log("lala", param1);
+      var acts = this.activityList;
+      if (true != param1) {
+        let suoyin = acts.findIndex((act) => {
+          if (act.id == param) {
+            return true;
+          }
+        });
+        var newact = this.activityList[suoyin];
+        newact.dianzanStyle = "iconfont icon-dianzan";
+        acts.splice(suoyin, 1, newact);
+      }
+    },
+
+    //点赞
+    toZan(param) {
+      postRequest("/blog/zanToArticle", param.id).then((resp) => {
+        if (resp) {
+          this.$message.closeAll();
+          var acts = this.activityList;
+          let suoyin = acts.findIndex((act) => {
+            if (act.id == param.id) {
+              return true;
+            }
+          });
+          var newact = this.activityList[suoyin];
+          if (resp.total == 1) {
+            //点赞成功
+            newact.dianzan =
+              newact.dianzan.length == 0
+                ? window.sessionStorage.getItem("username")
+                : newact.dianzan +
+                  "," +
+                  window.sessionStorage.getItem("username");
+            newact.dianzanStyle = "iconfont icon-dianzan_kuai";
+            newact.ysdz = true;
+          } else {
+            //取消点赞
+            newact.dianzan = newact.dianzan
+              .split("," + window.sessionStorage.getItem("username"))
+              .join("");
+            newact.dianzan = newact.dianzan
+              .split(window.sessionStorage.getItem("username"))
+              .join("");
+            newact.dianzanStyle = "iconfont icon-dianzan";
+            //变空心
+            newact.ysdz = false;
+          }
+          acts.splice(suoyin, 1, newact);
+        }
       });
     },
+
     //移除已上传图片
     removeLst(param) {
       var imgs = this.article.imgs;
@@ -454,6 +561,19 @@ export default {
             ) {
               item.ismine = true;
             }
+            if (
+              item.dianzan.includes(
+                window.sessionStorage.getItem("username") + ","
+              )
+            ) {
+              item.dianzanStyle = "iconfont icon-dianzan_kuai";
+              item.ysdz = true;
+              console.log("param~", item.dianzan);
+            } else {
+              item.ysdz = false;
+            }
+            this.isReflash = true;
+            item.dianzan = item.dianzan.substring(0, item.dianzan.length - 1);
             actlst.push(item);
           }
           this.activityList = actlst;
@@ -475,6 +595,7 @@ export default {
       postRequest("/blog/insertArticle", this.article).then((resp) => {
         if (resp) {
           this.loading = false;
+          this.reload();
         }
       });
     },
@@ -485,6 +606,7 @@ export default {
       postRequest("/blog/deleteArticle", id).then((resp) => {
         if (resp) {
           this.loading = false;
+          this.reload();
         }
       });
     },
@@ -508,7 +630,7 @@ export default {
         "http://wthrcdn.etouch.cn/weather_mini?city=" + obj
       );
       result.then((res) => {
-        console.log("天气查询结果", res.data.forecast[0]);
+        console.log("天气查询结果", res.data.obj);
         this.date = res.data.forecast[0].date + " " + res.data.forecast[0].type;
         this.tianqi =
           res.data.forecast[0].low + "~" + res.data.forecast[0].high;
