@@ -70,7 +70,7 @@
       </el-main>
       <el-footer>
         <div class="footer_login1">
-          <a href="http://www.ilan.ltd">ilan空间，梦开始的地方</a>
+          <a href="http://www.ilan.ltd">i懒空间,上班摸鱼的好地方</a>
         </div>
         <div class="footer_login">
           <img
@@ -94,7 +94,7 @@ export default {
     return {
       captchaUrl: "/blog/captcha?time" + new Date(),
       showModal: false,
-      kjjj: "lalalalal",
+      kjjj: "",
       registerForm: {
         username: "",
         password: "",
