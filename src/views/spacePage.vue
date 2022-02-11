@@ -24,16 +24,16 @@
           <div>
             <ul class="space_header_daohang">
               <li class="tabs-item">
-                <a @click="toSetting">首页</a>
+                <a @click="toSetting" class="dhCss" href="#">首页</a>
               </li>
               <li class="tabs-item">
-                <a @click="toIndex">留言</a>
+                <a @click="toIndex" class="dhCss" href="#">留言</a>
               </li>
               <li class="tabs-item">
-                <a @click="toSetting">活动</a>
+                <a @click="toSetting" class="dhCss" href="#">活动</a>
               </li>
               <li class="tabs-item">
-                <a @click="toSetting">应用</a>
+                <a @click="toSetting" class="dhCss" href="#">应用</a>
               </li>
             </ul>
           </div>
@@ -92,25 +92,25 @@
       <el-container style="flex-direction: row; height: calc(87vh)">
         <el-aside width="15%" style="height: calc(80vh)">
           <el-menu class="el-menu-space-left">
-            <el-menu-item
-              ><router-link to="/spacePage" class="daohang-link" exact=""
-                ><i class="el-icon-share"></i>好友动态</router-link
-              ></el-menu-item
+            <router-link to="/spacePage" class="daohang-link" exact=""
+              ><el-menu-item
+                ><i class="el-icon-share"></i>好友动态</el-menu-item
+              ></router-link
             >
-            <el-menu-item
-              ><router-link to="/mySpace" class="daohang-link" exact=""
-                ><i class="el-icon-s-home"></i>我的空间</router-link
-              ></el-menu-item
+            <router-link to="/mySpace" class="daohang-link" exact="">
+              <el-menu-item
+                ><i class="el-icon-s-home"></i>我的空间</el-menu-item
+              ></router-link
             >
-            <el-menu-item
-              ><router-link to="/myPhoto" class="daohang-link" exact=""
-                ><i class="el-icon-picture"></i>我的相册</router-link
-              ></el-menu-item
+            <router-link to="/myPhoto" class="daohang-link" exact=""
+              ><el-menu-item
+                ><i class="el-icon-picture"></i>我的相册</el-menu-item
+              ></router-link
             >
-            <el-menu-item
-              ><router-link to="/myApp" class="daohang-link" exact=""
-                ><i class="el-icon-menu"></i>我的应用</router-link
-              ></el-menu-item
+            <router-link to="/myApp" class="daohang-link" exact=""
+              ><el-menu-item
+                ><i class="el-icon-menu"></i>我的应用</el-menu-item
+              ></router-link
             >
           </el-menu>
         </el-aside>
@@ -496,8 +496,10 @@ export default {
             }
           });
           var newact = this.activityList[suoyin];
+          var zanStr = newact.dianzan;
           if (resp.total == 1) {
             //点赞成功
+
             newact.dianzan =
               newact.dianzan.length == 0
                 ? window.sessionStorage.getItem("username")
@@ -512,8 +514,18 @@ export default {
               .split("," + window.sessionStorage.getItem("username"))
               .join("");
             newact.dianzan = newact.dianzan
+              .split(window.sessionStorage.getItem("username") + ",")
+              .join("");
+            newact.dianzan = newact.dianzan
               .split(window.sessionStorage.getItem("username"))
               .join("");
+            /* var zanLst = zanStr.split(",");
+            zanStr = zanLst
+              .splice(
+                zanLst.indexOf(window.sessionStorage.getItem("username")),
+                1
+              )
+              .join(","); */
             newact.dianzanStyle = "iconfont icon-dianzan";
             //变空心
             newact.ysdz = false;
@@ -684,7 +696,7 @@ export default {
   color: aliceblue;
 }
 .space_el_main {
-  height: calc(80vh) !important;
+  height: calc(85vh) !important;
   padding: 10px !important;
   background-color: rgba(255, 255, 255, 0.5);
 }
@@ -797,7 +809,11 @@ export default {
   text-decoration: none;
 }
 .artimg {
-  text-align: left;
+  float: left;
+}
+.dhCss {
+  text-decoration: none;
+  color: white;
 }
 .body {
   color: crimson;

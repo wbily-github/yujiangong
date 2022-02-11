@@ -8,6 +8,43 @@
       backgroundRepeat: 'no-repeat',
     }"
   >
+    <!-- 新增文件夹 -->
+    <el-dialog
+      :visible.sync="showNewFolder"
+      :close-on-click-modal="true"
+      :modal="true"
+      title="新增相册"
+      width="30%"
+      :show-close="true"
+      :center="true"
+      >相册名称：
+      <el-input v-model="folder.folder" style="width: 58%"></el-input>
+      <div>
+        相册分类：
+        <el-select placeholder="请选择分类" v-model="folder.folderType">
+          <el-option
+            v-for="item in photoType"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          ></el-option>
+        </el-select>
+      </div>
+      <div style="width: 100%; text-align: center">
+        <el-button style="width: 50%" @click="savePhotoFolder">保存</el-button>
+      </div>
+    </el-dialog>
+    <!-- 设置弹框 -->
+    <el-dialog title="空间设置" :visible.sync="dialogSetting" width="30%">
+      <div label-width="20%">der啊，偷个懒，这都能被发现</div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogSetting = false">取 消</el-button>
+        <el-button type="primary" @click="dialogSetting = false"
+          >确 定</el-button
+        >
+      </span>
+    </el-dialog>
+    <!-- 展示原图 -->
     <el-dialog
       :visible.sync="showBigImg"
       :close-on-click-modal="true"
@@ -17,15 +54,6 @@
       class="bigImgDig"
     >
       <img :src="bigImg" style="height: 100%; width: 100%" />
-    </el-dialog>
-    <el-dialog title="空间设置" :visible.sync="dialogSetting" width="30%">
-      <div label-width="20%">der啊，偷个懒，这都能被发现</div>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogSetting = false">取 消</el-button>
-        <el-button type="primary" @click="dialogSetting = false"
-          >确 定</el-button
-        >
-      </span>
     </el-dialog>
     <el-container direction="vertical">
       <el-header class="space_el_header">
@@ -39,16 +67,16 @@
           <div>
             <ul class="space_header_daohang">
               <li class="tabs-item">
-                <a @click="toSetting">首页</a>
+                <a @click="toSetting" class="dhCss" href="#">首页</a>
               </li>
               <li class="tabs-item">
-                <a @click="toIndex">留言</a>
+                <a @click="toIndex" class="dhCss" href="#">留言</a>
               </li>
               <li class="tabs-item">
-                <a @click="toSetting">活动</a>
+                <a @click="toSetting" class="dhCss" href="#">活动</a>
               </li>
               <li class="tabs-item">
-                <a @click="toSetting">应用</a>
+                <a @click="toSetting" class="dhCss" href="#">应用</a>
               </li>
             </ul>
           </div>
@@ -107,49 +135,59 @@
       <el-container style="flex-direction: row; height: calc(87vh)">
         <el-aside width="15%" style="height: calc(80vh)">
           <el-menu class="el-menu-space-left">
-            <el-menu-item
-              ><router-link to="/spacePage" class="daohang-link" exact=""
-                ><i class="el-icon-share"></i>好友动态</router-link
-              ></el-menu-item
+            <router-link to="/spacePage" class="daohang-link" exact=""
+              ><el-menu-item
+                ><i class="el-icon-share"></i>好友动态</el-menu-item
+              ></router-link
             >
-            <el-menu-item
-              ><router-link to="/mySpace" class="daohang-link" exact=""
-                ><i class="el-icon-s-home"></i>我的空间</router-link
-              ></el-menu-item
+            <router-link to="/mySpace" class="daohang-link" exact="">
+              <el-menu-item
+                ><i class="el-icon-s-home"></i>我的空间</el-menu-item
+              ></router-link
             >
-            <el-menu-item
-              ><router-link to="/myPhoto" class="daohang-link" exact=""
-                ><i class="el-icon-picture"></i>我的相册</router-link
-              ></el-menu-item
+            <router-link to="/myPhoto" class="daohang-link" exact=""
+              ><el-menu-item
+                ><i class="el-icon-picture"></i>我的相册</el-menu-item
+              ></router-link
             >
-            <el-menu-item
-              ><router-link to="/myApp" class="daohang-link" exact=""
-                ><i class="el-icon-menu"></i>我的应用</router-link
-              ></el-menu-item
+            <router-link to="/myApp" class="daohang-link" exact=""
+              ><el-menu-item
+                ><i class="el-icon-menu"></i>我的应用</el-menu-item
+              ></router-link
             >
           </el-menu>
         </el-aside>
         <el-main class="space_el_main">
-          <div style="display: flex">
-            <div
-              v-show="showFolder"
-              v-for="(items, index) in myFolderList"
-              :key="(items, index)"
-              style="margin-top: 10px"
-            >
-              <div @click="openImgFolder(items.folderid)">
-                <i
-                  class="el-icon-folder-opened"
-                  style="text-align: center；margin-right: 2%"
-                ></i>
-                <div
-                  style="text-align: center; margin-right: 2%; font-size: 50%"
-                >
-                  {{ items.folder }}
+          <!-- 文件夹 -->
+          <div v-show="showFolder">
+            <div style="text-align: right; font-size: 50%">
+              编辑我的相册
+              <i class="el-icon-edit-outline"></i>
+            </div>
+            <div style="display: flex">
+              <div
+                v-for="(items, index) in myFolderList"
+                :key="(items, index)"
+                style="margin-top: 10px"
+              >
+                <div @click="openImgFolder(items.folderid)">
+                  <i
+                    class="el-icon-folder-opened"
+                    style="text-align: center；margin-right: 2%"
+                  ></i>
+                  <div
+                    style="text-align: center; margin-right: 2%; font-size: 50%"
+                  >
+                    {{ items.folder }}
+                  </div>
                 </div>
+              </div>
+              <div style="margin-top: 10px">
+                <i class="el-icon-folder-add" @click="toAddnewFolder"></i>
               </div>
             </div>
           </div>
+          <!-- 文件 -->
           <div v-show="!showFolder">
             <div style="display: flex">
               <i class="el-icon-back" @click="toFolder"></i>
@@ -245,14 +283,25 @@ import axios from "axios";
 import { postRequest } from "../uitls/api";
 import { L2Dwidget } from "live2d-widget";
 export default {
+  inject: ["reload"],
   data() {
     return {
+      folder: {
+        folderType: "",
+        folder: "",
+      },
+      selectNewFolderKey: "",
       dialogSetting: false,
       bigImg: "",
+      showNewFolder: false,
       showBigImg: false,
       showFolder: false,
       myPhotoList: [],
       myFolderList: [],
+      photoType: [
+        { value: "0", label: "私密相册" },
+        { value: "1", label: "公开相册" },
+      ],
       name:
         null == window.sessionStorage.getItem("username")
           ? "佚名"
@@ -316,6 +365,7 @@ export default {
         name: "IndexPage",
       });
     },
+
     //退出
     exit() {
       postRequest("/blog/logout").then((resp) => {
@@ -343,6 +393,21 @@ export default {
     },
     toFolder() {
       this.showFolder = true;
+    },
+    toAddnewFolder() {
+      this.showNewFolder = true;
+    },
+    //保存相册
+    savePhotoFolder() {
+      postRequest("/blog/savePhotoFolder", this.folder)
+        .then((resp) => {
+          console.log("相册保存成功", resp);
+          this.myFolderList = resp.obj;
+          this.reload();
+        })
+        .catch((resp) => {
+          console.log("相册保存失败");
+        });
     },
     //隐藏文件夹展示图片
     openImgFolder(param) {
@@ -459,126 +524,4 @@ export default {
 </script>
 
 <style>
-.indexBack {
-  width: 100%;
-  height: calc(100vh);
-  overflow: hidden;
-  top: 0;
-  left: 0;
-  font-size: 200%;
-  text-align: center;
-  position: absolute;
-}
-.el-container {
-  width: 100%;
-  min-height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.space_header {
-  margin-top: -35px;
-}
-.space_el_header {
-  margin-left: -8px;
-  margin-right: -8px;
-  height: calc(7vh) !important;
-  background: black;
-  color: aliceblue;
-}
-.space_el_main {
-  height: calc(86.5vh) !important;
-  background-color: rgba(255, 255, 255, 0.5);
-}
-.spaceContent {
-  height: calc(62vh);
-  width: 100%;
-  border: 1px;
-  font-size: 80%;
-  margin-top: calc(0.5vh);
-  font-size: 80%;
-  overflow-x: hidden;
-  overflow-y: scroll;
-  position: absolute;
-}
-.spaceContent1 {
-  height: calc(56vh);
-  width: 100%;
-  border: 1px;
-  margin-top: calc(1.5vh);
-  font-size: 80%;
-  overflow-x: hidden;
-  overflow-y: scroll;
-  position: absolute;
-}
-.space_el_footer {
-  background: dimgrey;
-  height: calc(10vh) !important;
-  width: 100%+7px;
-  margin-left: -6px;
-  color: aliceblue;
-}
-.space_header_right {
-  font-size: 80%;
-  margin-top: -10px;
-  float: right;
-}
-
-.el-menu-space-left {
-  width: 80%;
-  height: 50%;
-  opacity: 0.5;
-  margin-top: 30px;
-}
-.daohang-link {
-  text-decoration: none;
-}
-.el-footer {
-  height: 4vh;
-  width: 100%;
-  align-items: center;
-  font-size: 25%;
-}
-
-.tabs-item {
-  font-size: 50%;
-  float: left;
-  margin: 10px;
-}
-
-.el-icon-search {
-  font-size: 56%;
-}
-.lf {
-  margin-top: -15px;
-}
-.lf1 {
-  font-size: 80%;
-  float: right;
-  display: block;
-  margin: 0, 0, 0, -10px;
-}
-.lf2 {
-  font-size: 45%;
-  float: left;
-  display: block;
-  margin-top: 7px;
-  margin-right: 20px;
-}
-
-.li1 {
-  list-style: none;
-  margin-top: -2px;
-  margin-left: -8px;
-}
-.artimg {
-  float: left;
-}
-
-.body {
-  /* float: left; */
-  color: crimson;
-  margin-top: 50px;
-}
 </style>

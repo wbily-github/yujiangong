@@ -6,6 +6,9 @@ import Register from '../views/register.vue'
 import SpacePage from '../views/spacePage.vue'
 import UserInfoPage from '../views/userInfoPage.vue'
 import myPhoto from '../views/myPhoto.vue'
+import test from '../views/test.vue';
+import mySpace from '../views/mySpace.vue';
+import myApp from '../views/myApp.vue';
 
 Vue.use(VueRouter)
 
@@ -37,6 +40,19 @@ const routes = [
     path: '/myPhoto',
     name: 'myPhoto',
     component: myPhoto
+  },{
+    path: '/mySpace',
+    name: 'mySpace',
+    component: mySpace
+  },{
+    path: '/myApp',
+    name: 'myApp',
+    component: myApp
+  },
+  {
+    path: '/test',
+    name: 'test',
+    component: test
   },
  
   
